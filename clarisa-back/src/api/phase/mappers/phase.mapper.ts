@@ -10,6 +10,7 @@ export class PhaseMapper {
     const phaseDto: PhaseDto = new PhaseDto();
 
     phaseDto.active = phase.auditableFields?.is_active;
+    phaseDto.status = phase.is_open ? 'Open' : 'Closed';
     phaseDto.name = phase.name;
     phaseDto.phaseId = phase.id;
     phaseDto.year = phase.year;

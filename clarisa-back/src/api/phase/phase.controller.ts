@@ -11,6 +11,7 @@ import {
 import { PhaseService } from './phase.service';
 import { CreatePhaseDto } from './dto/create-phase.dto';
 import { UpdatePhaseDto } from './dto/update-phase.dto';
+import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
 
 @Controller()
 export class PhaseController {
@@ -22,8 +23,11 @@ export class PhaseController {
   }
 
   @Get()
-  findAll() {
-    return this.phaseService.findAll();
+  findAll(
+    @Query('show') show: FindAllOptions,
+    @Query('status') status: string,
+  ) {
+    return this.phaseService.findAll(show, status);
   }
 
   @Get('/by-application/:app')
