@@ -14,9 +14,10 @@ import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { DropdownModule } from 'primeng/dropdown';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
-  declarations: [ClarisaPanelComponent],
+  declarations: [ClarisaPanelComponent, FooterComponent],
   imports: [
     CommonModule,
     ClarisaPanelRoutingModule,

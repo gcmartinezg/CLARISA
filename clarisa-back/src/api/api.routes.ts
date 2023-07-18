@@ -64,6 +64,7 @@ import { PermissionModule } from './permission/permission.module';
 import path from 'path';
 import { SecondOrderAdministrativeDivisionModule } from './second-order-administrative-division/second-order-administrative-division.module';
 import { FirstOrderAdministrativeDivisionModule } from './first-order-administrative-division/first-order-administrative-division.module';
+import { PhaseModule } from './phase/phase.module';
 
 export const apiRoutes = [
   {
@@ -320,10 +321,14 @@ export const apiRoutes = [
   },
   {
     path: 'first-order-administrative-division',
-    module: FirstOrderAdministrativeDivisionModule
+    module: FirstOrderAdministrativeDivisionModule,
   },
   {
     path: 'second-order-administrative-division',
-    module: SecondOrderAdministrativeDivisionModule
-  }
+    module: SecondOrderAdministrativeDivisionModule,
+  },
+  {
+    path: 'phases',
+    module: PhaseModule,
+  },
 ];
