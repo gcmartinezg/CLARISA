@@ -4,6 +4,7 @@ import { AxiosResponse } from 'axios';
 import { Logger } from '@nestjs/common';
 import axios from 'axios';
 import https from 'https';
+import crypto from 'crypto';
 
 export abstract class BaseApi {
   protected externalAppEndpoint: string;
@@ -20,6 +21,10 @@ export abstract class BaseApi {
     try {
       return this.httpService.get(`${this.externalAppEndpoint}/${endpoint}`, {
         auth: { username: this.user, password: this.pass },
+        httpsAgent: new https.Agent({
+          // allow legacy server
+          secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+        }),
         //httpsAgent: this.httpsAgent,
       });
     } catch (e) {
