@@ -23,6 +23,7 @@ import { Initiative } from '../../../api/initiative/entities/initiative.entity';
 import { InitiativeStageRepository } from '../../../api/initiative/repositories/initiative-status.repository';
 import { WorkpackageCountryRepository } from '../../../api/workpackage/repositories/workpackage-country.repository';
 import { WorkpackageRegionRepository } from '../../../api/workpackage/repositories/workpackage-country.repository copy';
+import { AuditableEntity } from '../../entities/extends/auditable-entity.entity';
 
 @Injectable()
 export class CronOST {
@@ -314,6 +315,7 @@ export class CronOST {
     const newWorkpackage: Workpackage = new Workpackage();
 
     newWorkpackage.acronym = ostWorkpackage.acronym;
+    newWorkpackage.auditableFields = new AuditableEntity();
     newWorkpackage.auditableFields.created_at = ostWorkpackage.created_at;
     newWorkpackage.auditableFields.created_by = 3043; //clarisadmin
     newWorkpackage.auditableFields.is_active = ostWorkpackage.active === 1;
@@ -406,6 +408,7 @@ export class CronOST {
     const newWorkpackageCountry: WorkpackageCountry = new WorkpackageCountry();
 
     newWorkpackageCountry.country_id = dbCountry.id;
+    newWorkpackageCountry.auditableFields = new AuditableEntity();
     newWorkpackageCountry.auditableFields.created_at = new Date();
     newWorkpackageCountry.auditableFields.created_by = 3043; //clarisadmin
     newWorkpackageCountry.auditableFields.is_active =
@@ -462,6 +465,7 @@ export class CronOST {
     const newWorkpackageRegion: WorkpackageRegion = new WorkpackageRegion();
 
     newWorkpackageRegion.region_id = dbRegion.id;
+    newWorkpackageRegion.auditableFields = new AuditableEntity();
     newWorkpackageRegion.auditableFields.created_at = new Date();
     newWorkpackageRegion.auditableFields.created_by = 3043; //clarisadmin
     newWorkpackageRegion.auditableFields.is_active =
@@ -583,6 +587,7 @@ export class CronOST {
   ): Initiative {
     const newInitiative: Initiative = new Initiative();
 
+    newInitiative.auditableFields = new AuditableEntity();
     newInitiative.auditableFields.created_at = new Date();
     newInitiative.auditableFields.created_by = 3043; //clarisadmin
     newInitiative.auditableFields.is_active = ostInitiative.active === 1;
@@ -641,6 +646,7 @@ export class CronOST {
 
     newInitiativeStage.id = +ostInitiativeStage.initvStgId;
     newInitiativeStage.action_area_id = +ostInitiative.action_area_id;
+    newInitiativeStage.auditableFields = new AuditableEntity();
     newInitiativeStage.auditableFields.created_at = new Date();
     newInitiativeStage.auditableFields.created_by = 3043; //clarisadmin
     newInitiativeStage.initiative_id = dbInitiative.id;
