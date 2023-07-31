@@ -16,7 +16,7 @@ import { getMetadataArgsStorage } from 'typeorm';
 @Injectable()
 export class PhaseRepository {
   private readonly _logger: Logger = new Logger(PhaseRepository.name);
-  private phaseRepositories: Map<string, Repository<ObjectLiteral & Phase>> =
+  public phaseRepositories: Map<string, Repository<ObjectLiteral & Phase>> =
     new Map();
 
   constructor(private dataSource: DataSource) {
