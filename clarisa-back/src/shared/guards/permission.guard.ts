@@ -21,7 +21,7 @@ export class PermissionGuard implements CanActivate {
     );
     const request = context.switchToHttp().getRequest();
     const userPayload = request.user;
-    const route = request.route;
+    const route = request.originalUrl;
 
     return this.userService
       .findOneByEmail(userPayload.email)
@@ -31,7 +31,7 @@ export class PermissionGuard implements CanActivate {
           return userDb.id === 3043;
         }
 
-        return (userDb.permissions ?? []).includes(route.path);
+        return (userDb.permissions ?? []).includes(route);
       });
   }
 }
