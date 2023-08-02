@@ -16,6 +16,8 @@ import { ApiGeoNames } from './ost/api.geonames';
 import { PhaseRepository } from '../../api/phase/repositories/phase.repository';
 import { ApiTOC } from './toc/api.toc';
 import { CronTOC } from './toc/cron.toc';
+import { CronReporting } from './reporting/cron.reporting';
+import { ApiReporting } from './reporting/api.reporting';
 
 @Module({
   imports: [HttpModule],
@@ -36,6 +38,8 @@ import { CronTOC } from './toc/cron.toc';
     CronTOC,
     ApiTOC,
     PhaseRepository,
+    CronReporting,
+    ApiReporting,
   ],
   controllers: [IntegrationController],
   exports: [QaService],

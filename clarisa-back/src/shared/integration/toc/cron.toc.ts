@@ -20,8 +20,8 @@ export class CronTOC {
     private readonly phaseRepository: PhaseRepository,
   ) {}
 
-  // every sunday at 5 am
-  //@Cron('* * 5 * * 0')
+  // every saturday at 10 pm
+  @Cron('* * 22 * * 6')
   public async cronTocPhasesData(): Promise<void> {
     const phasesRequest = await firstValueFrom(this.api.getPhases());
 
@@ -84,17 +84,17 @@ export class CronTOC {
     return tocPhase;
   }
 
-  private static createNewPhase(ostInitiative: PhaseTocDto): PhaseToc {
+  private static createNewPhase(tocPhase: PhaseTocDto): PhaseToc {
     const newPhase: PhaseToc = new PhaseToc();
 
     newPhase.auditableFields = new AuditableEntity();
     newPhase.auditableFields.created_at = new Date();
     newPhase.auditableFields.created_by = 3043; //clarisadmin
-    newPhase.auditableFields.is_active = ostInitiative.active;
-    newPhase.id = ostInitiative.id;
-    newPhase.is_open = ostInitiative.status === PhaseStatus.SHOW_ONLY_OPEN.name;
-    newPhase.name = ostInitiative.name;
-    newPhase.year = ostInitiative.reporting_year;
+    newPhase.auditableFields.is_active = tocPhase.active;
+    newPhase.id = tocPhase.id;
+    newPhase.is_open = tocPhase.status === PhaseStatus.SHOW_ONLY_OPEN.name;
+    newPhase.name = tocPhase.name;
+    newPhase.year = tocPhase.reporting_year;
     newPhase.auditableFields.updated_at = new Date();
 
     return newPhase;

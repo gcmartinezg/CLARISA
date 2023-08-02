@@ -39,12 +39,7 @@ export class PhaseRepository {
     show: FindAllOptions = FindAllOptions.SHOW_ONLY_ACTIVE,
     prmsApp: string = PRMSApplication.ALL.simpleName,
   ): Promise<Phase[]> {
-    /*
-        unfortunately we cannot reference the Phase entity, as
-        it is an abstract class, so we need to reference a
-        specific implementation of it
-    */
-    let whereClause: FindOptionsWhere<PhaseToc> = {};
+    let whereClause: FindOptionsWhere<Phase> = {};
     const incomingStatus = PhaseStatus.getfromPath(status);
     const incomingMis = PRMSApplication.getfromSimpleName(prmsApp);
 

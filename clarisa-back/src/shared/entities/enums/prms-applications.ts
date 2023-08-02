@@ -15,6 +15,11 @@ export class PRMSApplication {
     'ost',
     'phases_ost',
   );
+  public static readonly IPSR = new PRMSApplication(
+    'Innovation Packages and Scaling Readiness',
+    'ipsr',
+    'phases_ipsr',
+  );
 
   private constructor(
     public readonly prettyName: string,

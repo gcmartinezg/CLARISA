@@ -22,3 +22,5 @@ export abstract class Phase {
   @Column(() => AuditableEntity, { prefix: '' })
   auditableFields: AuditableEntity;
 }
+
+export type PhaseConstructor<T extends Phase> = new () => T;
