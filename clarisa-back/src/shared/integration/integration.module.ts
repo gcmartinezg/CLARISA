@@ -13,6 +13,11 @@ import { ApiOST } from './ost/api.ost';
 import { CronOST } from './ost/cron.ost';
 import { QaService } from './qa/qa.service';
 import { ApiGeoNames } from './ost/api.geonames';
+import { PhaseRepository } from '../../api/phase/repositories/phase.repository';
+import { ApiTOC } from './toc/api.toc';
+import { CronTOC } from './toc/cron.toc';
+import { CronReporting } from './reporting/cron.reporting';
+import { ApiReporting } from './reporting/api.reporting';
 
 @Module({
   imports: [HttpModule],
@@ -30,8 +35,13 @@ import { ApiGeoNames } from './ost/api.geonames';
     StageRepository,
     WorkpackageCountryRepository,
     WorkpackageRegionRepository,
+    CronTOC,
+    ApiTOC,
+    PhaseRepository,
+    CronReporting,
+    ApiReporting,
   ],
   controllers: [IntegrationController],
   exports: [QaService],
 })
-export class IntegrationModule { }
+export class IntegrationModule {}
