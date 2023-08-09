@@ -6,4 +6,6 @@ export class CreateSdgResultsDto{
   sdg_contribution: string;
 
   is_active: boolean;
+
+  id_toc_initiative:string;
 }

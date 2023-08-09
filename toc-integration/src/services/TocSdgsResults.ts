@@ -5,114 +5,103 @@ import { CreateSdgResultsDto } from "../dto/tocSdgResults";
 import { TocSdgResultsSdgTargetsDto } from "../dto/tocSdgResultsSdgTargets";
 import { TocSdgResultsSdgIndicatorsDto } from "../dto/tocSdgResultsSdgIndicators";
 
-export class SdgResults {
-    public validatorType = new ValidatorTypes();
-  public errorMessage = new ErrorValidators();
-    async saveSdgResults(sdgResults: any) {
+export class TocSdgsServices {
+    public validatorType = new ValidatorTypes()
+    public errorMessage = new ErrorValidators();
+  async createTocSdgResults(sdgResultToc, initiative_id) {
+    try {
         let listValidSdgResults = [];
-        let listNotValidSdgResults = [];
-        if (this.validatorType.validatorIsArray(sdgResults)) {
-          sdgResults.forEach(async (element) => {
+        let listSdgTargets = [];
+        let listIndicator = [];
+    if (this.validatorType.validatorIsArray(sdgResultToc)){
+        for(let sdgResult of sdgResultToc) {
             if (
-              this.validatorType.existPropertyInObjectMul(sdgResults, [
-                "sdg_id",
-                "toc_result_id",
-                "sdg_contribution",
-                "sdg_targets",
-                "sdg_indicators",
-              ])
-            ) {
-              const sdgResultsDto = new CreateSdgResultsDto();
-              sdgResultsDto.sdg_id =
-                typeof element.sdg_id == "number" ? element.sdg_id : null;
-              sdgResultsDto.toc_result_id =
-                typeof element.toc_result_id == "string"
-                  ? element.toc_result_id
-                  : null;
-              sdgResultsDto.sdg_contribution =
-                typeof element.sdg_contribution == "string"
-                  ? element.sdg_contribution
-                  : null;
-              sdgResultsDto.is_active = true;
-              this.validatorType.deletebyAllRelationSdgs(element.toc_result_id);
-              if (this.validatorType.validExistNull(sdgResultsDto)) {
-                const relationSdg = await this.saveRelationSdgResults(
-                  element,
-                  element.toc_result_id
-                );
-                if (typeof relationSdg == "object") {
-                  listValidSdgResults.push({
-                    sdg_results: sdgResultsDto,
-                    relation: relationSdg,
-                  });
-                } else {
-                  return this.errorMessage.errorGeneral(
-                    "Exist type incorrect",
-                    400
-                  );
+                this.validatorType.existPropertyInObjectMul(sdgResult, [
+                  "sdg_id",
+                  "toc_result_id",
+                  "sdg_contribution",
+                  "sdg_targets",
+                  "sdg_indicators",
+                ])){
+                    const sdgResultT = new CreateSdgResultsDto();
+                    sdgResultT.sdg_id =
+            typeof sdgResult.sdg_id == "number"
+              ? sdgResult.sdg_id
+              : null;
+              sdgResultT.toc_result_id =
+            typeof sdgResult.toc_result_id == "string"
+              ? sdgResult.toc_result_id
+              : null;
+              sdgResultT.sdg_contribution =
+            typeof sdgResult.sdg_contribution == "string"
+              ? sdgResult.sdg_contribution
+              : null;
+            sdgResultT.id_toc_initiative = initiative_id;
+            await listValidSdgResults.push(sdgResultT);
+            listSdgTargets = listSdgTargets.concat(await this.createTocSdgResultsSdgTargets(sdgResult.sdg_targets, sdgResult.toc_result_id));
+            listIndicator = listIndicator.concat(await this.createTocSdgResultsTocSdgIndicators(sdgResult.sdg_indicators, sdgResult.toc_result_id));
                 }
-              } else {
-                listNotValidSdgResults.push(element);
-              }
-            }
-          });
-        } else {
-          return this.errorMessage.errorGeneral("Expected Array ", 400);
         }
-        return listValidSdgResults;
-      }
-    
-      async saveRelationSdgResults(objectRelacion: any, toc_results_id: string) {
-        let listValidSdgTarget = [];
-        let listValidSdgIndicator = [];
-        if (this.validatorType.validatorIsArray(objectRelacion.sdg_targets)) {
-          objectRelacion.sdg_targets.forEach((element) => {
-            if (
-              this.validatorType.existPropertyInObjectMul(element, [
-                "sdg_target_id",
-                "active",
-              ])
-            ) {
-              const relacionSdgTarget = new TocSdgResultsSdgTargetsDto();
-              relacionSdgTarget.sdg_target_id =
-                typeof element.sdg_target_id == "number"
-                  ? element.sdg_target_id
-                  : null;
-              relacionSdgTarget.is_active =
-                typeof element.active == "boolean" ? element.active : null;
-              relacionSdgTarget.sdg_toc_result_id = toc_results_id;
-              if (this.validatorType.validExistNull(relacionSdgTarget)) {
-                listValidSdgTarget.push(relacionSdgTarget);
-              } else {
-                return false;
-              }
+    }
+
+    return {
+        sdgResults: listValidSdgResults,
+        sdgTargets: listSdgTargets,
+        sdgIndicators: listIndicator
+    }
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+async createTocSdgResultsSdgTargets(sdgTargetsToc, toc_results_id: string) {
+    try {
+        let sdgTargets:any = [];
+        if(this.validatorType.validatorIsArray(sdgTargetsToc)){
+            for(let sdgTarget of sdgTargetsToc){
+                if (
+                    this.validatorType.existPropertyInObjectMul(sdgTarget, [
+                        "sdg_target_id",
+                    ])){
+                        const relacionSdgTarget = new TocSdgResultsSdgTargetsDto();
+          relacionSdgTarget.sdg_target_id =
+            typeof sdgTarget.sdg_target_id == "number"
+              ? sdgTarget.sdg_target_id
+              : null;
+            relacionSdgTarget.sdg_toc_result_id = toc_results_id;
+            await sdgTargets.push(relacionSdgTarget);
+                    }
             }
-          });
         }
-        if (this.validatorType.validatorIsArray(objectRelacion.sdg_indicators)) {
-          objectRelacion.sdg_indicators.forEach((element) => {
-            if (
-              this.validatorType.existPropertyInObjectMul(element, [
-                "sdg_indicator_id",
-              ])
-            ) {
-              const relacionSdgIndicator = new TocSdgResultsSdgIndicatorsDto();
-              relacionSdgIndicator.sdg_indicator_id =
-                typeof element.sdg_indicator_id == "number"
-                  ? element.sdg_target_id
-                  : null;
-              relacionSdgIndicator.sdg_toc_result_id = toc_results_id;
-              if (this.validatorType.validExistNull(relacionSdgIndicator)) {
-                listValidSdgIndicator.push(relacionSdgIndicator);
-              } else {
-                return false;
-              }
+        return sdgTargets;
+    } catch (error) {
+        throw error;
+    }
+}
+
+async createTocSdgResultsTocSdgIndicators(sdgIndicatorsToc, toc_results_id: string) {
+    try {
+        let sdgIndicatorT:any = [];
+        if(this.validatorType.validatorIsArray(sdgIndicatorsToc)){
+            for(let sdgIndicatorI of sdgIndicatorsToc){
+                if (
+                    this.validatorType.existPropertyInObjectMul(sdgIndicatorI,  [
+                        "sdg_indicator_id",
+                      ])){
+                        const relacionSdgIndicator = new TocSdgResultsSdgIndicatorsDto();
+                        relacionSdgIndicator.sdg_indicator_id =
+                            typeof sdgIndicatorI.sdg_indicator_id == "number"
+                            ? sdgIndicatorI.sdg_indicator_id
+                            : null;
+                        relacionSdgIndicator.sdg_toc_result_id = toc_results_id;
+                            await sdgIndicatorT.push(sdgIndicatorI);
+                    }
             }
-          });
         }
-        return {
-          sdg_target: listValidSdgTarget,
-          sdg_indicator: listValidSdgIndicator,
-        };
-      }
+        return sdgIndicatorT;
+    } catch (error) {
+        throw error;
+    }
+}
 }

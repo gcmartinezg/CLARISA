@@ -37,9 +37,10 @@ export class ActionAreaResults{
               actionAreaDto.statement =
                 typeof element.statement == "string" ? element.statement : null;
               actionAreaDto.is_active = true;
+              /*
               this.validatorType.deletebyAllRelationActionArea(
                 element.toc_result_id
-              );
+              );*/
               if (this.validatorType.validExistNull(actionAreaDto)) {
                 const relation = await this.relationActionAreaResults(
                   element,

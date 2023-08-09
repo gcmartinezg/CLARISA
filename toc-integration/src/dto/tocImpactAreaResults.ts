@@ -3,4 +3,5 @@ export class TocImpactAreaResultsDto{
     impact_area_id:number;
     outcome_statement: string;
     is_active:boolean;
+    id_toc_initiative:string;
 }

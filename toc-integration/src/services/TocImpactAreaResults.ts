@@ -9,145 +9,159 @@ import { TocImpactAreaResultsSdgResultsDto } from "../dto/tocImpactAreaResultsSd
 
 
 
-export class ImpactAreaResults{
-    public validatorType = new ValidatorTypes();
-    public errorMessage = new ErrorValidators();
-    async saveImpactAreaResults(impactAreaResults: any, sdgResults: any) {
-        let listValidImpactArea = [];
-        if (this.validatorType.validatorIsArray(impactAreaResults)) {
-          impactAreaResults.forEach(async (element) => {
-            if (
-              this.validatorType.existPropertyInObjectMul(element, [
-                "toc_result_id",
-                "impact_area_id",
-                "outcome_statement",
-                "global_targets",
-                "impact_indicators",
-                "sdgs",
-              ])
-            ) {
-              const impactAreadto = new TocImpactAreaResultsDto();
-              impactAreadto.impact_area_id =
-                typeof element.impact_area_id == "number"
-                  ? element.impact_area_id
-                  : null;
-              impactAreadto.toc_result_id =
-                typeof element.toc_result_id == "string"
-                  ? element.toc_result_id
-                  : null;
-              impactAreadto.outcome_statement =
-                typeof element.outcome_statement == "string"
-                  ? element.outcome_statement
-                  : null;
-              this.validatorType.deletebyAllRelationImpactAre(
-                element.toc_result_id
-              );
-              if (this.validatorType.validExistNull(impactAreadto)) {
-                const relation = await this.saveRelationImpactArea(
-                  element,
-                  element.toc_result_id,
-                  sdgResults
-                );
-                listValidImpactArea.push({
-                  impact_area: impactAreadto,
-                  relation: relation,
-                });
+export class TocResultImpactAreaServices{
+  public validatorType = new ValidatorTypes();
+  public errorMessage = new ErrorValidators();
+
+  async saveImpactAreaTocResult(impactArea: any, initiative_id:any, sdgResults:any){
+      try {
+          let listImpactAreaResults = [];
+          let listGlobalTargets = [];
+          let listImpactAreaIndicators = [];
+          let listSdgResults = [];
+          if (this.validatorType.validatorIsArray(impactArea)){
+              for(let impactAreaIndex of impactArea){
+                  if (
+                      this.validatorType.existPropertyInObjectMul(impactAreaIndex, [
+                        "toc_result_id",
+                        "impact_area_id",
+                        "outcome_statement",
+                        "global_targets",
+                        "impact_indicators",
+                        "sdgs",
+                      ])
+                    ){
+                      const impactAreadto = new TocImpactAreaResultsDto();
+                      impactAreadto.impact_area_id =
+                        typeof impactAreaIndex.impact_area_id == "number"
+                          ? impactAreaIndex.impact_area_id
+                          : null;
+                      impactAreadto.toc_result_id =
+                        typeof impactAreaIndex.toc_result_id == "string"
+                          ? impactAreaIndex.toc_result_id
+                          : null;
+                      impactAreadto.outcome_statement =
+                        typeof impactAreaIndex.outcome_statement == "string"
+                          ? impactAreaIndex.outcome_statement
+                          : null;
+                      impactAreadto.id_toc_initiative = initiative_id;
+                      listImpactAreaResults.push(impactAreadto);
+                      listGlobalTargets = listGlobalTargets.concat(await this.saveGlobalTargetsTocResult(impactAreaIndex.global_targets, impactAreaIndex.toc_result_id));
+                      listImpactAreaIndicators = listImpactAreaIndicators.concat(await this.saveImpactAreaIndicatorsTocResult(impactAreaIndex.impact_indicators, impactAreaIndex.toc_result_id));
+                     
+                      if(impactAreaIndex.sdgs[0].length > 0){
+                          
+                          
+                          listSdgResults = listSdgResults.concat(await this.saveImpactAreaSdgResultsTocResult(impactAreaIndex.sdgs[0], impactAreaIndex.toc_result_id, sdgResults));
+                          
+                          
+                      }
+                      }
               }
-            }
-          });
-        }
-        return listValidImpactArea;
+          }
+          return {
+              listImpactAreaResults: listImpactAreaResults,
+              globalTargets: listGlobalTargets,
+              impactAreaIndicators: listImpactAreaIndicators,
+              ImpactAreaSdgResult: listSdgResults
+          }
+      } catch (error) {
+          throw error;
       }
-    
-      async saveRelationImpactArea(
-        objectImpactArea: any,
-        toc_result_id: string,
-        sdgResults: any
-      ) {
-        let listValidGlobalTarget = [];
-        let listValidImpactIndicator = [];
-        let listValidSdg = [];
-        let noDuplicate;
-        if (this.validatorType.validatorIsArray(objectImpactArea.global_targets)) {
-          objectImpactArea.global_targets.forEach((element) => {
-            if (
-              this.validatorType.existPropertyInObjectMul(element, [
-                "global_target_id",
-                "active",
-              ])
-            ) {
-              const relationGlobalTarget =
-                new TocImpactAreaResultsGlobalTargetsDto();
-              relationGlobalTarget.impact_area_toc_result_id = toc_result_id;
-              relationGlobalTarget.global_target_id =
-                typeof element.global_target_id == "number"
-                  ? element.global_target_id
-                  : null;
-              relationGlobalTarget.is_active =
-                typeof element.active == "boolean" ? element.active : null;
-              if (this.validatorType.validExistNull(relationGlobalTarget)) {
+  }
+
+  async saveGlobalTargetsTocResult(globalTargets: any, impactAreaResults:any){
+      try {
+          let listValidGlobalTarget = [];
+          if(this.validatorType.validatorIsArray(globalTargets)){
+              for(let global of globalTargets){
+                  if (
+                      this.validatorType.existPropertyInObjectMul(global, [
+                        "global_target_id",
+                      ])){
+                          const relationGlobalTarget =
+              new TocImpactAreaResultsGlobalTargetsDto();
+            relationGlobalTarget.impact_area_toc_result_id = impactAreaResults;
+            relationGlobalTarget.global_target_id =
+              typeof global.global_target_id == "number"
+                ? global.global_target_id
+                : null;
                 listValidGlobalTarget.push(relationGlobalTarget);
+                      }
+                    
               }
-            }
-          });
-        }
-        if (this.validatorType.validatorIsArray(objectImpactArea.sdgs)) {
-          noDuplicate = await this.validatorType.deleteRepets(
-            objectImpactArea.sdgs[0]
-          );
-    
-          noDuplicate.forEach(async (element) => {
-            if (
-              this.validatorType.existPropertyInObjectMul(element, [
-                "toc_result_id",
-                "active",
-              ])
-            ) {
-              const relationSdg = new TocImpactAreaResultsSdgResultsDto();
-              relationSdg.impact_area_toc_result_id = toc_result_id;
-              relationSdg.sdg_toc_result_id =
-                typeof element.toc_result_id == "string" &&
-                this.validatorType.validExistId(sdgResults, element.toc_result_id)
-                  ? element.toc_result_id
-                  : null;
-              relationSdg.is_active =
-                typeof element.active == "boolean" ? element.active : null;
-              if (this.validatorType.validExistNull(relationSdg)) {
-                listValidSdg.push(relationSdg);
-              }
-            }
-          });
-        }
-        if (
-          this.validatorType.validatorIsArray(objectImpactArea.impact_indicators)
-        ) {
-          objectImpactArea.impact_indicators.forEach((element) => {
-            if (
-              this.validatorType.existPropertyInObjectMul(element, [
-                "impact_indicator_id",
-                "active",
-              ])
-            ) {
-              const relationImpactIndicator =
-                new TocImpactAreaResultsImpactAreaIndicatorsDto();
-              relationImpactIndicator.impact_area_toc_result_id = toc_result_id;
-              relationImpactIndicator.impact_areas_indicators_id =
-                typeof element.impact_indicator_id == "number"
-                  ? element.impact_indicator_id
-                  : null;
-              relationImpactIndicator.is_active =
-                typeof element.active == "boolean" ? element.active : null;
-              if (this.validatorType.validExistNull(relationImpactIndicator)) {
-                listValidImpactIndicator.push(relationImpactIndicator);
-              }
-            }
-          });
-        }
-    
-        return {
-          global_target: listValidGlobalTarget,
-          impact_indicator: listValidImpactIndicator,
-          sdg: listValidSdg,
-        };
+          }
+          return listValidGlobalTarget;
+      } catch (error) {
+          throw error;
       }
+  }
+ 
+
+  async saveImpactAreaIndicatorsTocResult(impactAreaIndicators: any, impactAreaResults:any){
+      try {
+          let listValidImpactAreaIndicators = [];
+          if (
+              this.validatorType.validatorIsArray(impactAreaIndicators)
+            ){
+              for(let impactIndicator of impactAreaIndicators){
+                  if (
+                      this.validatorType.existPropertyInObjectMul(impactIndicator, [
+                          "impact_indicator_id",
+                      ])
+                    ){
+                      const relationImpactIndicator =
+                      new TocImpactAreaResultsImpactAreaIndicatorsDto();
+                    relationImpactIndicator.impact_area_toc_result_id = impactAreaResults;
+                    relationImpactIndicator.impact_areas_indicators_id =
+                      typeof impactIndicator.impact_indicator_id == "number"
+                        ? impactIndicator.impact_indicator_id
+                        : null;
+                  listValidImpactAreaIndicators.push(relationImpactIndicator);
+              }
+            }
+          }
+          return listValidImpactAreaIndicators;
+      } catch (error) {
+              throw error;
+      }
+  }
+
+
+  async saveImpactAreaSdgResultsTocResult(sdgResults: any, impactAreaResults:any, sdgResultsSave:any){
+      try {
+          let listSdgImpact = [];
+          
+              if (this.validatorType.validatorIsArray(sdgResults)) {
+                  console.log('entre');
+                  
+                  for(let sdg of sdgResults){
+                      console.log('entre2');
+                      
+                      if (
+                          this.validatorType.existPropertyInObjectMul(sdg, [
+                            "toc_result_id",
+                          ])
+                        ) {
+                          
+                          const relationSdg = new TocImpactAreaResultsSdgResultsDto();
+                          console.log(sdgResultsSave);
+                relationSdg.impact_area_toc_result_id = impactAreaResults;
+                relationSdg.sdg_toc_result_id =
+                  typeof sdg.toc_result_id == "string" &&
+                  this.validatorType.validExistId(sdgResultsSave, sdg.toc_result_id)
+                    ? sdg.toc_result_id
+                    : null;
+                    
+                    listSdgImpact.push(relationSdg);
+                    
+                        }
+                  }
+              
+          }
+          return listSdgImpact;
+      } catch (error) {
+          throw error;
+      }
+  }
 }

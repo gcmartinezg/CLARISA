@@ -1,5 +1,5 @@
 import { Connection } from "typeorm";
-import { Database } from "../database/db";
+//import { Database } from "../database/db";
 
 import { TocSdgResultsSdgIndicators } from "../entities/tocSdgResultsSdgIndicators";
 import { TocSdgResultsSdgTargets } from "../entities/tocSdgResultsSdgTargets";
@@ -120,7 +120,7 @@ export class ValidatorTypes {
 
     return estado;
   }
-
+/*
   async deletebyAllRelationSdgs(toc_result_id: string) {
     const database = new Database();
     const dbConn: Connection = await database.getConnection();
@@ -183,5 +183,5 @@ export class ValidatorTypes {
     await tocRegions.delete(toc_result_id);
     await tocCountries.delete(toc_result_id);
     return true;
-  }
+  }*/
 }

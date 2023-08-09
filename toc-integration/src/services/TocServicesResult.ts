@@ -1,5 +1,5 @@
 import { Connection } from "typeorm";
-import { Database } from "../database/db";
+//import { Database } from "../database/db";
 import { ValidatorTypes } from "../validators/validatorType";
 import { ErrorValidators } from "../validators/errorsValidators";
 import { CreateSdgResultsDto } from "../dto/tocSdgResults";
@@ -38,17 +38,23 @@ import { TocResultsCountries } from "../entities/tocResultsCountries";
 import { TocResultsRegions } from "../entities/tocResultsRegions";
 
 import { SdgTarget } from "../entities/sdg_target";
+import axios from "axios";
+import { TocSdgsServices } from "./TocSdgsResults";
+import { TocResultImpactAreaServices } from "./TocImpactAreaResults";
 
 export class TocServicesResults {
   public validatorType = new ValidatorTypes();
   public errorMessage = new ErrorValidators();
-
+  public tocSdgResults = new TocSdgsServices();
+  public tocImpactAreas = new TocResultImpactAreaServices();
+  
+  /*
   async queryTest() {
-    let database = new Database();
-    let dbConn: Connection = await database.getConnection();
+    //let database = new Database();
+    //let dbConn: Connection = await database.getConnection();
 
     try {
-      const queryRunner = dbConn.createQueryRunner();
+      //const queryRunner = dbConn.createQueryRunner();
       await queryRunner.connect();
 
       const getInitiatives = await queryRunner.query(`
@@ -77,314 +83,40 @@ export class TocServicesResults {
       return { message: "getInitiatives" + error };
     }
   }
+ */
+  async splitInformation(idInitiativeToc:string){
+    let tocHost = await 'https://toc.loc.codeobia.com/api/toc/'+idInitiativeToc+'/dashboard-result';
 
-  async splitInformation(tocResultDashboard: any, idInitiativeToc: string) {
+    try {
+        const narrative =  await axios({
+            method: 'get',
+            url: tocHost,
+            timeout: 20000 // only wait for 2s
+        });
+        let InformationSaving = null
+        if( this.validatorType.existPropertyInObjectMul(narrative.data, [
+            "sdg_results",
+            "impact_area_results",
+            "action_area_results",
+            "output_outcome_results",
+          ])){
+            let sdgTocResults = await this.tocSdgResults.createTocSdgResults(narrative.data.sdg_results, idInitiativeToc);
+            let impactAreaTocResults = await this.tocImpactAreas.saveImpactAreaTocResult(narrative.data.impact_area_results, idInitiativeToc, sdgTocResults.sdgResults);
 
+            InformationSaving = {... sdgTocResults, ...impactAreaTocResults}
+        }
+
+        return InformationSaving;
+    } catch (error) {
+        throw new Error(error);
+    }
     
-    if (
-      this.validatorType.existPropertyInObjectMul(tocResultDashboard, [
-        "sdg_results",
-        "impact_area_results",
-        "action_area_results",
-        "output_outcome_results",
-      ])
-    ) {
-      const sdg_results = await this.saveSdgResults(
-        tocResultDashboard.sdg_results
-      );
-      if (
-        sdg_results != null &&
-        this.validatorType.validatorIsArray(sdg_results)
-      ) {
-        const impact_area_results = await this.saveImpactAreaResults(
-          tocResultDashboard.impact_area_results,
-          sdg_results
-        );
-        if (
-          impact_area_results != null &&
-          this.validatorType.validatorIsArray(impact_area_results)
-        ) {
-          const action_area = await this.saveActionAreaResult(
-            tocResultDashboard.action_area_results,
-            impact_area_results
-          );
-          if (
-            action_area != null &&
-            this.validatorType.validatorIsArray(action_area)
-          ) {
-            const tocResult = await this.saveOutputOutcomeResults(
-              tocResultDashboard.output_outcome_results,
-              sdg_results,
-              impact_area_results,
-              action_area,
-              idInitiativeToc
-            );
-            return await this.saveInDataBase(
-              tocResult,
-              sdg_results,
-              impact_area_results,
-              action_area
-            );
-          }
-        }
-      }
-    } else {
-      return this.errorMessage.errorGeneral(
-        "This json not complete or new names titles",
-        400
-      );
-    }
-  }
+    
+    
+}
 
-  //mapping sdgResults.
-  async saveSdgResults(sdgResults: any) {
-    let listValidSdgResults = [];
-    let listNotValidSdgResults = [];
-    if (this.validatorType.validatorIsArray(sdgResults)) {
-      sdgResults.forEach(async (element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(sdgResults, [
-            "sdg_id",
-            "toc_result_id",
-            "sdg_contribution",
-            "sdg_targets",
-            "sdg_indicators",
-          ])
-        ) {
-          const sdgResultsDto = new CreateSdgResultsDto();
-          sdgResultsDto.sdg_id =
-            typeof element.sdg_id == "number" ? element.sdg_id : null;
-          sdgResultsDto.toc_result_id =
-            typeof element.toc_result_id == "string"
-              ? element.toc_result_id
-              : null;
-          sdgResultsDto.sdg_contribution =
-            typeof element.sdg_contribution == "string"
-              ? element.sdg_contribution
-              : null;
-          sdgResultsDto.is_active = true;
-          this.validatorType.deletebyAllRelationSdgs(element.toc_result_id);
-          if (this.validatorType.validExistNull(sdgResultsDto)) {
-            const relationSdg = await this.saveRelationSdgResults(
-              element,
-              element.toc_result_id
-            );
-            if (typeof relationSdg == "object") {
-              listValidSdgResults.push({
-                sdg_results: sdgResultsDto,
-                relation: relationSdg,
-              });
-            } else {
-              return this.errorMessage.errorGeneral(
-                "Exist type incorrect",
-                400
-              );
-            }
-          } else {
-            listNotValidSdgResults.push(element);
-          }
-        }
-      });
-    } else {
-      return this.errorMessage.errorGeneral("Expected Array ", 400);
-    }
-    return listValidSdgResults;
-  }
+  
 
-  async saveRelationSdgResults(objectRelacion: any, toc_results_id: string) {
-    let listValidSdgTarget = [];
-    let listValidSdgIndicator = [];
-    if (this.validatorType.validatorIsArray(objectRelacion.sdg_targets)) {
-      objectRelacion.sdg_targets.forEach((element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "sdg_target_id",
-            "active",
-          ])
-        ) {
-          const relacionSdgTarget = new TocSdgResultsSdgTargetsDto();
-          relacionSdgTarget.sdg_target_id =
-            typeof element.sdg_target_id == "number"
-              ? element.sdg_target_id
-              : null;
-          relacionSdgTarget.is_active =
-            typeof element.active == "boolean" ? element.active : null;
-          relacionSdgTarget.sdg_toc_result_id = toc_results_id;
-          if (this.validatorType.validExistNull(relacionSdgTarget)) {
-            listValidSdgTarget.push(relacionSdgTarget);
-          } else {
-            return false;
-          }
-        }
-      });
-    }
-    if (this.validatorType.validatorIsArray(objectRelacion.sdg_indicators)) {
-      objectRelacion.sdg_indicators.forEach((element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "sdg_indicator_id",
-          ])
-        ) {
-          const relacionSdgIndicator = new TocSdgResultsSdgIndicatorsDto();
-          relacionSdgIndicator.sdg_indicator_id =
-            typeof element.sdg_indicator_id == "number"
-              ? element.sdg_target_id
-              : null;
-          relacionSdgIndicator.sdg_toc_result_id = toc_results_id;
-          if (this.validatorType.validExistNull(relacionSdgIndicator)) {
-            listValidSdgIndicator.push(relacionSdgIndicator);
-          } else {
-            return false;
-          }
-        }
-      });
-    }
-    return {
-      sdg_target: listValidSdgTarget,
-      sdg_indicator: listValidSdgIndicator,
-    };
-  }
-
-  //mapping impact areas results
-
-  async saveImpactAreaResults(impactAreaResults: any, sdgResults: any) {
-    let listValidImpactArea = [];
-    if (this.validatorType.validatorIsArray(impactAreaResults)) {
-      impactAreaResults.forEach(async (element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "toc_result_id",
-            "impact_area_id",
-            "outcome_statement",
-            "global_targets",
-            "impact_indicators",
-            "sdgs",
-          ])
-        ) {
-          const impactAreadto = new TocImpactAreaResultsDto();
-          impactAreadto.impact_area_id =
-            typeof element.impact_area_id == "number"
-              ? element.impact_area_id
-              : null;
-          impactAreadto.toc_result_id =
-            typeof element.toc_result_id == "string"
-              ? element.toc_result_id
-              : null;
-          impactAreadto.outcome_statement =
-            typeof element.outcome_statement == "string"
-              ? element.outcome_statement
-              : null;
-          this.validatorType.deletebyAllRelationImpactAre(
-            element.toc_result_id
-          );
-          if (this.validatorType.validExistNull(impactAreadto)) {
-            const relation = await this.saveRelationImpactArea(
-              element,
-              element.toc_result_id,
-              sdgResults
-            );
-            listValidImpactArea.push({
-              impact_area: impactAreadto,
-              relation: relation,
-            });
-          }
-        }
-      });
-    }
-    return listValidImpactArea;
-  }
-
-  async saveRelationImpactArea(
-    objectImpactArea: any,
-    toc_result_id: string,
-    sdgResults: any
-  ) {
-    let listValidGlobalTarget = [];
-    let listValidImpactIndicator = [];
-    let listValidSdg = [];
-    let noDuplicate;
-    if (this.validatorType.validatorIsArray(objectImpactArea.global_targets)) {
-      objectImpactArea.global_targets.forEach((element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "global_target_id",
-            "active",
-          ])
-        ) {
-          const relationGlobalTarget =
-            new TocImpactAreaResultsGlobalTargetsDto();
-          relationGlobalTarget.impact_area_toc_result_id = toc_result_id;
-          relationGlobalTarget.global_target_id =
-            typeof element.global_target_id == "number"
-              ? element.global_target_id
-              : null;
-          relationGlobalTarget.is_active =
-            typeof element.active == "boolean" ? element.active : null;
-          if (this.validatorType.validExistNull(relationGlobalTarget)) {
-            listValidGlobalTarget.push(relationGlobalTarget);
-          }
-        }
-      });
-    }
-    if (this.validatorType.validatorIsArray(objectImpactArea.sdgs)) {
-      noDuplicate = await this.validatorType.deleteRepets(
-        objectImpactArea.sdgs[0]
-      );
-
-      noDuplicate.forEach(async (element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "toc_result_id",
-            "active",
-          ])
-        ) {
-          const relationSdg = new TocImpactAreaResultsSdgResultsDto();
-          relationSdg.impact_area_toc_result_id = toc_result_id;
-          relationSdg.sdg_toc_result_id =
-            typeof element.toc_result_id == "string" &&
-            this.validatorType.validExistId(sdgResults, element.toc_result_id)
-              ? element.toc_result_id
-              : null;
-          relationSdg.is_active =
-            typeof element.active == "boolean" ? element.active : null;
-          if (this.validatorType.validExistNull(relationSdg)) {
-            listValidSdg.push(relationSdg);
-          }
-        }
-      });
-    }
-    if (
-      this.validatorType.validatorIsArray(objectImpactArea.impact_indicators)
-    ) {
-      objectImpactArea.impact_indicators.forEach((element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "impact_indicator_id",
-            "active",
-          ])
-        ) {
-          const relationImpactIndicator =
-            new TocImpactAreaResultsImpactAreaIndicatorsDto();
-          relationImpactIndicator.impact_area_toc_result_id = toc_result_id;
-          relationImpactIndicator.impact_areas_indicators_id =
-            typeof element.impact_indicator_id == "number"
-              ? element.impact_indicator_id
-              : null;
-          relationImpactIndicator.is_active =
-            typeof element.active == "boolean" ? element.active : null;
-          if (this.validatorType.validExistNull(relationImpactIndicator)) {
-            listValidImpactIndicator.push(relationImpactIndicator);
-          }
-        }
-      });
-    }
-
-    return {
-      global_target: listValidGlobalTarget,
-      impact_indicator: listValidImpactIndicator,
-      sdg: listValidSdg,
-    };
-  }
 
   //mapping action areas results
 
@@ -416,9 +148,9 @@ export class TocServicesResults {
           actionAreaDto.statement =
             typeof element.statement == "string" ? element.statement : null;
           actionAreaDto.is_active = true;
-          this.validatorType.deletebyAllRelationActionArea(
+          /*this.validatorType.deletebyAllRelationActionArea(
             element.toc_result_id
-          );
+          );*/
           if (this.validatorType.validExistNull(actionAreaDto)) {
             const relation = await this.relationActionAreaResults(
               element,
@@ -552,7 +284,7 @@ export class TocServicesResults {
           outPutComeDto.is_active = true;
           outPutComeDto.is_global = true;
           outPutComeDto.id_toc_initiative = id_toc_initiative;
-          this.validatorType.deletebyAllRelationOutcome(element.toc_result_id);
+          //this.validatorType.deletebyAllRelationOutcome(element.toc_result_id);
           const relation = await this.relationTocResults(
             element,
             element.toc_result_id,
@@ -927,7 +659,7 @@ export class TocServicesResults {
       },
     };
   }
-
+/*
   async saveInDataBase(
     outputOutcomeResults: any,
     sdgResults: any,
@@ -1171,5 +903,5 @@ export class TocServicesResults {
         }
       }
     }
-  }
+  }*/
 }
