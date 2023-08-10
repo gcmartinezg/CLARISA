@@ -149,6 +149,7 @@ export class MailUtil {
         's.galvez@cgiar.org',
         'j.cadavid@cgiar.org',
         'h.f.tobon@cgiar.org',
+        'Santiago.Sanchez@cgiar.org',
       ];
     }
 
@@ -213,6 +214,7 @@ export class MailUtil {
         's.galvez@cgiar.org',
         'j.cadavid@cgiar.org',
         'h.f.tobon@cgiar.org',
+        'Santiago.Sanchez@cgiar.org',
       ];
     }
 
