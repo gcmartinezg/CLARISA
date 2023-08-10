@@ -247,12 +247,13 @@ export class InstitutionRepository extends Repository<Institution> {
     isHQ: boolean,
   ): Promise<InstitutionLocation> {
     const institutionLocation: InstitutionLocation = new InstitutionLocation();
+    institutionLocation.auditableFields = new AuditableEntity();
 
     institutionLocation.country_id = request.country_id;
-    institutionLocation.auditableFields.created_at = request.accepted_date;
-    institutionLocation.auditableFields.created_by = request.accepted_by;
     institutionLocation.institution_id = request.institution_id;
     institutionLocation.is_headquater = isHQ;
+    institutionLocation.auditableFields.created_at = request.accepted_date;
+    institutionLocation.auditableFields.created_by = request.accepted_by;
 
     return this.institutionLocationRepository.save(institutionLocation);
   }
@@ -261,13 +262,14 @@ export class InstitutionRepository extends Repository<Institution> {
     partnerRequest: PartnerRequest,
   ): Promise<InstitutionDto> {
     let institution: Institution = new Institution();
+    institution.auditableFields = new AuditableEntity();
 
     institution.acronym = partnerRequest.acronym;
-    institution.auditableFields.created_at = partnerRequest.accepted_date;
-    institution.auditableFields.created_by = partnerRequest.accepted_by;
-    institution.institution_type_id = partnerRequest.institution_type_id;
     institution.name = partnerRequest.partner_name;
     institution.website_link = partnerRequest.web_page;
+    institution.institution_type_id = partnerRequest.institution_type_id;
+    institution.auditableFields.created_at = partnerRequest.accepted_date;
+    institution.auditableFields.created_by = partnerRequest.accepted_by;
 
     institution = await this.save(institution);
     partnerRequest.institution_id = institution.id;
@@ -307,6 +309,7 @@ export class InstitutionRepository extends Repository<Institution> {
   ) {
     let institution: Institution = new Institution();
     institution.auditableFields = new AuditableEntity();
+
     institution.acronym = BulkInstitutions.acronym;
     institution.name = BulkInstitutions.partner_name;
     institution.website_link = BulkInstitutions.web_page;
