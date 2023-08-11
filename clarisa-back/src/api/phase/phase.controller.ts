@@ -31,8 +31,12 @@ export class PhaseController {
   }
 
   @Get('/by-application/:app')
-  findAllByApplication(@Param('app') application: string) {
-    return this.phaseService.findAllByApplication(application);
+  findAllByApplication(
+    @Param('app') application: string,
+    @Query('show') show: FindAllOptions,
+    @Query('status') status: string,
+  ) {
+    return this.phaseService.findAllByApplication(application, show, status);
   }
 
   @Get(':id')
