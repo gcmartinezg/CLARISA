@@ -58,6 +58,7 @@ export class PhaseRepository {
 
     switch (show) {
       case FindAllOptions.SHOW_ALL:
+        //do nothing. we will be showing everything, so no condition is needed;
         break;
       case FindAllOptions.SHOW_ONLY_ACTIVE:
       case FindAllOptions.SHOW_ONLY_INACTIVE:
@@ -87,6 +88,7 @@ export class PhaseRepository {
         }
         break;
       case PRMSApplication.REPORTING_TOOL:
+      case PRMSApplication.IPSR:
       case PRMSApplication.TOC:
       case PRMSApplication.OST:
         phases = (await this.phaseRepositories.get(incomingMis.tableName).find({
