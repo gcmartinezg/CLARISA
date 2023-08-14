@@ -1,5 +1,5 @@
 import { Connection } from "typeorm";
-//import { Database } from "../database/db";
+import { Database } from "../database/db";
 import { ValidatorTypes } from "../validators/validatorType";
 import { ErrorValidators } from "../validators/errorsValidators";
 import { CreateSdgResultsDto } from "../dto/tocSdgResults";
@@ -41,24 +41,25 @@ import { SdgTarget } from "../entities/sdg_target";
 import axios from "axios";
 import { TocSdgsServices } from "./TocSdgsResults";
 import { TocResultImpactAreaServices } from "./TocImpactAreaResults";
+import { ActionAreaTocServices } from "./TocActionAreaResults";
 
 export class TocServicesResults {
   public validatorType = new ValidatorTypes();
   public errorMessage = new ErrorValidators();
   public tocSdgResults = new TocSdgsServices();
   public tocImpactAreas = new TocResultImpactAreaServices();
+  public actionAreaToc = new ActionAreaTocServices();
   
-  /*
   async queryTest() {
-    //let database = new Database();
-    //let dbConn: Connection = await database.getConnection();
+    let database = new Database();
+    let dbConn: Connection = await database.getConnection();
 
     try {
-      //const queryRunner = dbConn.createQueryRunner();
+      const queryRunner = dbConn.createQueryRunner();
       await queryRunner.connect();
 
       const getInitiatives = await queryRunner.query(`
-      SELECT * FROM initiatives
+      SELECT * FROM toc_results
 
       `);
 
@@ -83,7 +84,7 @@ export class TocServicesResults {
       return { message: "getInitiatives" + error };
     }
   }
- */
+ 
   async splitInformation(idInitiativeToc:string){
     let tocHost = await 'https://toc.loc.codeobia.com/api/toc/'+idInitiativeToc+'/dashboard-result';
 
@@ -102,8 +103,8 @@ export class TocServicesResults {
           ])){
             let sdgTocResults = await this.tocSdgResults.createTocSdgResults(narrative.data.sdg_results, idInitiativeToc);
             let impactAreaTocResults = await this.tocImpactAreas.saveImpactAreaTocResult(narrative.data.impact_area_results, idInitiativeToc, sdgTocResults.sdgResults);
-
-            InformationSaving = {... sdgTocResults, ...impactAreaTocResults}
+            let actionAreaResults = await this.actionAreaToc.saveActionAreaToc(narrative.data.action_area_results, idInitiativeToc, impactAreaTocResults.listImpactAreaResults)
+            InformationSaving = {... sdgTocResults, ...impactAreaTocResults, ...actionAreaResults}
         }
 
         return InformationSaving;
@@ -120,116 +121,6 @@ export class TocServicesResults {
 
   //mapping action areas results
 
-  async saveActionAreaResult(actionAreaResults: any, impactAreaResulst: any) {
-    let listValidActionArea = [];
-    if (this.validatorType.validatorIsArray(actionAreaResults)) {
-      actionAreaResults.forEach(async (element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "toc_result_id",
-            "action_area_id",
-            "outcome_id",
-            "statement",
-            "outcome_indicators",
-            "impact_areas",
-          ])
-        ) {
-          const actionAreaDto = new TocActionAreaResultsDto();
-          actionAreaDto.toc_result_id =
-            typeof element.toc_result_id == "string"
-              ? element.toc_result_id
-              : null;
-          actionAreaDto.action_areas_id =
-            typeof element.action_area_id == "number"
-              ? element.action_area_id
-              : null;
-          actionAreaDto.outcome_id =
-            typeof element.outcome_id == "number" ? element.outcome_id : null;
-          actionAreaDto.statement =
-            typeof element.statement == "string" ? element.statement : null;
-          actionAreaDto.is_active = true;
-          /*this.validatorType.deletebyAllRelationActionArea(
-            element.toc_result_id
-          );*/
-          if (this.validatorType.validExistNull(actionAreaDto)) {
-            const relation = await this.relationActionAreaResults(
-              element,
-              impactAreaResulst,
-              element.toc_result_id
-            );
-            listValidActionArea.push({
-              action_area: actionAreaDto,
-              relation: relation,
-            });
-          }
-        }
-      });
-    }
-    return listValidActionArea;
-  }
-
-  async relationActionAreaResults(
-    objectActionArea: any,
-    impactAreaResults: any,
-    toc_result_id
-  ) {
-    let listValidOutCome = [];
-    let listValidImpactArea = [];
-    if (
-      this.validatorType.validatorIsArray(objectActionArea.outcome_indicators)
-    ) {
-      objectActionArea.outcome_indicators.forEach((element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "outcome_indicator_id",
-            "active",
-          ])
-        ) {
-          const relationOutCome =
-            new TocActionAreaResultsOutcomesIndicatorsDto();
-          relationOutCome.action_area_toc_result_id = toc_result_id;
-          relationOutCome.action_area_outcome_indicator_id =
-            typeof element.outcome_indicator_id == "number"
-              ? element.outcome_indicator_id
-              : null;
-          relationOutCome.is_active =
-            typeof element.active == "boolean" ? element.active : null;
-          if (this.validatorType.validExistNull(relationOutCome)) {
-            listValidOutCome.push(relationOutCome);
-          }
-        }
-      });
-    }
-    if (this.validatorType.validatorIsArray(objectActionArea.impact_areas)) {
-      objectActionArea.impact_areas.forEach((element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "toc_result_id",
-            "active",
-          ])
-        ) {
-          const relationImpactArea =
-            new TocActionAreaResultsImpactAreaResultsDto();
-          relationImpactArea.action_area_toc_result_id = toc_result_id;
-          relationImpactArea.impact_area_toc_result_id =
-            typeof element.toc_result_id == "string" &&
-            this.validatorType.validExistIdImpact(
-              impactAreaResults,
-              element.toc_result_id
-            )
-              ? element.toc_result_id
-              : null;
-          relationImpactArea.is_active =
-            typeof element.active == "boolean" ? element.active : null;
-          if (this.validatorType.validExistNull(relationImpactArea)) {
-            listValidImpactArea.push(relationImpactArea);
-          }
-        }
-      });
-    }
-
-    return { outcome: listValidOutCome, impact_area: listValidImpactArea };
-  }
 
   //mapping output_outcome_results
 
