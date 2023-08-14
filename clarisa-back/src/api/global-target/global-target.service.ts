@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
 import { UpdateGlobalTargetDto } from './dto/update-global-target.dto';
 import { GlobalTarget } from './entities/global-target.entity';
@@ -8,17 +6,17 @@ import { GlobalTargetRepository } from './repositories/global-target.repository'
 
 @Injectable()
 export class GlobalTargetService {
-  constructor(private GlobalTargetRepository: GlobalTargetRepository) {}
+  constructor(private globalTargetRepository: GlobalTargetRepository) {}
 
   findAll(
     option: FindAllOptions = FindAllOptions.SHOW_ONLY_ACTIVE,
   ): Promise<GlobalTarget[]> {
     switch (option) {
       case FindAllOptions.SHOW_ALL:
-        return this.GlobalTargetRepository.find();
+        return this.globalTargetRepository.find();
       case FindAllOptions.SHOW_ONLY_ACTIVE:
       case FindAllOptions.SHOW_ONLY_INACTIVE:
-        return this.GlobalTargetRepository.find({
+        return this.globalTargetRepository.find({
           where: {
             auditableFields: {
               is_active: option === FindAllOptions.SHOW_ONLY_ACTIVE,
@@ -31,11 +29,11 @@ export class GlobalTargetService {
   }
 
   async findOne(id: number): Promise<GlobalTarget> {
-    return await this.GlobalTargetRepository.findOneBy({ id });
+    return await this.globalTargetRepository.findOneBy({ id });
   }
 
   async getUsersPagination(offset?: number, limit = 10) {
-    const [items, count] = await this.GlobalTargetRepository.findAndCount({
+    const [items, count] = await this.globalTargetRepository.findAndCount({
       order: {
         id: 'ASC',
       },
@@ -52,6 +50,6 @@ export class GlobalTargetService {
   async update(
     updateUserDtoList: UpdateGlobalTargetDto[],
   ): Promise<GlobalTarget[]> {
-    return await this.GlobalTargetRepository.save(updateUserDtoList);
+    return await this.globalTargetRepository.save(updateUserDtoList);
   }
 }

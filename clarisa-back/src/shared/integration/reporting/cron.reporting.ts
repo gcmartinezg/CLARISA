@@ -4,14 +4,12 @@ import { ApiReporting } from './api.reporting';
 import { PhaseRepository } from '../../../api/phase/repositories/phase.repository';
 import { Cron } from '@nestjs/schedule';
 import { firstValueFrom } from 'rxjs';
-import { ObjectLiteral, Repository } from 'typeorm';
 import {
   Phase,
   PhaseConstructor,
 } from '../../../api/phase/entities/phase.entity';
 import { PhaseReportingDto } from './dto/phases.reporting.dto';
 import { AuditableEntity } from '../../entities/extends/auditable-entity.entity';
-import { PhaseReporting } from '../../../api/phase/entities/phase-reporting.entity';
 
 @Injectable()
 export class CronReporting {
@@ -29,7 +27,7 @@ export class CronReporting {
   ): Promise<void> {
     const phasesRequest = await firstValueFrom(this.api.getPhases(app));
 
-    if (phasesRequest.status === HttpStatus.OK) {
+    if (phasesRequest && phasesRequest.status === HttpStatus.OK) {
       this.logger.debug(`Started ${app.prettyName} phases synchronization`);
       const appPhasesRepository = this.phaseRepository.phaseRepositories.get(
         app.tableName,
@@ -49,7 +47,7 @@ export class CronReporting {
       );
 
       oldPhasesDb.forEach((op) => {
-        const updatedPhase = CronReporting.updatePhase(op, phasesReporting);
+        CronReporting.updatePhase(op, phasesReporting);
         updatedPhaseDb.push(op);
       });
 

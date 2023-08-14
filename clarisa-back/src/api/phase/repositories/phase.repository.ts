@@ -7,10 +7,8 @@ import {
 } from 'typeorm';
 import { Phase } from '../entities/phase.entity';
 import { FindAllOptions } from '../../../shared/entities/enums/find-all-options';
-import { PhaseDto } from '../dto/phase.dto';
 import { PhaseStatus } from '../../../shared/entities/enums/phase-status';
 import { PRMSApplication } from '../../../shared/entities/enums/prms-applications';
-import { PhaseToc } from '../entities/phase-toc.entity';
 import { getMetadataArgsStorage } from 'typeorm';
 
 @Injectable()
@@ -58,6 +56,7 @@ export class PhaseRepository {
 
     switch (show) {
       case FindAllOptions.SHOW_ALL:
+        //do nothing. we will be showing everything, so no condition is needed;
         break;
       case FindAllOptions.SHOW_ONLY_ACTIVE:
       case FindAllOptions.SHOW_ONLY_INACTIVE:
@@ -87,6 +86,7 @@ export class PhaseRepository {
         }
         break;
       case PRMSApplication.REPORTING_TOOL:
+      case PRMSApplication.IPSR:
       case PRMSApplication.TOC:
       case PRMSApplication.OST:
         phases = (await this.phaseRepositories.get(incomingMis.tableName).find({

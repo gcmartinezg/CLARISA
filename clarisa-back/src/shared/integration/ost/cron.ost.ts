@@ -4,8 +4,6 @@ import { ApiOST } from './api.ost';
 import { WorkpackageOstDto } from './dto/workpackage.ost.dto';
 import { InitiativeOstDto } from './dto/initivative.ost.dto';
 import { firstValueFrom } from 'rxjs';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { InitiativeStageOstDto } from './dto/initiative-stage.ost.dto';
 import { WorkpackageCountryOstDto } from './dto/workpackage-country.ost.dto';
 import { WorkpackageRegionOstDto } from './dto/workpackage-region.ost.dto';
@@ -47,7 +45,7 @@ export class CronOST {
       this.api.getWorkpackages(),
     );
 
-    if (workpackagesRequest.status === HttpStatus.OK) {
+    if (workpackagesRequest && workpackagesRequest.status === HttpStatus.OK) {
       this.logger.debug('Started workpackage synchronization');
       const oldWorkpackagesDb: Workpackage[] =
         await this.workpackageRepository.find();
@@ -481,7 +479,7 @@ export class CronOST {
   public async cronInitiativeRelatedData() {
     const initiativesRequest = await firstValueFrom(this.api.getInitiatives());
 
-    if (initiativesRequest.status === HttpStatus.OK) {
+    if (initiativesRequest && initiativesRequest.status === HttpStatus.OK) {
       this.logger.debug('Started initiative synchronization');
       const oldInitiativesDb: Initiative[] =
         await this.initiativeRepository.find();

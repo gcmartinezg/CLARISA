@@ -44,16 +44,19 @@ export class SdgTargetService {
   ): Promise<SdgTarget[]> {
     switch (option) {
       case FindAllOptions.SHOW_ALL:
-        return await this.sdgTargetsRepository.query(`select sdgt.id, sdgt.sdg_target_code as sdgTargetCode, sdgt.sdg_target as sdgTarget, sdg.id as usndCode
+        return await this.sdgTargetsRepository
+          .query(`select sdgt.id, sdgt.sdg_target_code as sdgTargetCode, sdgt.sdg_target as sdgTarget, sdg.id as usndCode
                                                          from sustainable_development_goal_targets sdgt 
                                                         join sustainable_development_goals sdg on sdg.id = sdgt.sdg_id`);
       case FindAllOptions.SHOW_ONLY_ACTIVE:
-        return await this.sdgTargetsRepository.query(`select sdgt.id, sdgt.sdg_target_code as sdgTargetCode, sdgt.sdg_target as sdgTarget, sdg.id as usndCode
+        return await this.sdgTargetsRepository
+          .query(`select sdgt.id, sdgt.sdg_target_code as sdgTargetCode, sdgt.sdg_target as sdgTarget, sdg.id as usndCode
                                                          from sustainable_development_goal_targets sdgt 
                                                         join sustainable_development_goals sdg on sdg.id = sdgt.sdg_id 
                                                         where sdgt.is_active = 1`);
       case FindAllOptions.SHOW_ONLY_INACTIVE:
-        return await this.sdgTargetsRepository.query(`select sdgt.id, sdgt.sdg_target_code as sdgTargetCode, sdgt.sdg_target as sdgTarget, sdg.id as usndCode
+        return await this.sdgTargetsRepository
+          .query(`select sdgt.id, sdgt.sdg_target_code as sdgTargetCode, sdgt.sdg_target as sdgTarget, sdg.id as usndCode
         from sustainable_development_goal_targets sdgt 
        join sustainable_development_goals sdg on sdg.id = sdgt.sdg_id 
        where sdgt.is_active = 0`);

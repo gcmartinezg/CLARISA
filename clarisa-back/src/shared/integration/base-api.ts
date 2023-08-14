@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Observable } from 'rxjs';
+import { Observable, catchError, of, timeout } from 'rxjs';
 import { AxiosResponse } from 'axios';
 import { Logger } from '@nestjs/common';
 import axios from 'axios';
@@ -18,21 +18,25 @@ export abstract class BaseApi {
   protected getRequest<T = any>(
     endpoint: string,
   ): Observable<AxiosResponse<T, any>> {
-    try {
-      return this.httpService.get(`${this.externalAppEndpoint}/${endpoint}`, {
+    return this.httpService
+      .get(`${this.externalAppEndpoint}/${endpoint}`, {
         auth: { username: this.user, password: this.pass },
         httpsAgent: new https.Agent({
           // allow legacy server
           secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
         }),
         //httpsAgent: this.httpsAgent,
-      });
-    } catch (e) {
-      if (axios.isAxiosError(e)) {
-        this.logger.error(`axios error: ${e.message}`);
-      } else {
-        this.logger.error(`unexpected error: ${e.message}`);
-      }
-    }
+      })
+      .pipe(
+        timeout(30000), //we will wait 30 seconds for the response
+        catchError((err) => {
+          if (axios.isAxiosError(err)) {
+            this.logger.error(`axios error: ${err.message}`);
+          } else {
+            this.logger.error(`unexpected error: ${err.message}`);
+          }
+          return of(null);
+        }),
+      );
   }
 }

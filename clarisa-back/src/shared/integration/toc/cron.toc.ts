@@ -4,7 +4,6 @@ import { PhaseRepository } from '../../../api/phase/repositories/phase.repositor
 import { Cron } from '@nestjs/schedule';
 import { firstValueFrom } from 'rxjs';
 import { PhaseStatus } from '../../entities/enums/phase-status';
-import { FindAllOptions } from '../../entities/enums/find-all-options';
 import { PRMSApplication } from '../../entities/enums/prms-applications';
 import { PhaseTocDto } from './dto/phases.toc.dto';
 import { PhaseToc } from '../../../api/phase/entities/phase-toc.entity';
@@ -25,7 +24,7 @@ export class CronTOC {
   public async cronTocPhasesData(): Promise<void> {
     const phasesRequest = await firstValueFrom(this.api.getPhases());
 
-    if (phasesRequest.status === HttpStatus.OK) {
+    if (phasesRequest && phasesRequest.status === HttpStatus.OK) {
       this.logger.debug('Started ToC phases synchronization');
       const tocPhasesRepository = this.phaseRepository.phaseRepositories.get(
         PRMSApplication.TOC.tableName,
@@ -40,7 +39,7 @@ export class CronTOC {
       const newPhasesToc = CronTOC.getNewPhases(oldPhasesDb, phasesToc);
 
       oldPhasesDb.forEach((op) => {
-        const updatedPhase = CronTOC.updatePhase(op, phasesToc);
+        CronTOC.updatePhase(op, phasesToc);
         updatedPhaseDb.push(op);
       });
 
