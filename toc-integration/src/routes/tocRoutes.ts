@@ -8,7 +8,7 @@ const TocResultDashboard = new tocController();
 router.post("/toc", TocResultDashboard.getTocResultDashboard);
 
 // Get test
-//router.get("/tocs", TocResultDashboard.getToc)
+router.get("/tocs", TocResultDashboard.getToc)
 
 
 // Get test
