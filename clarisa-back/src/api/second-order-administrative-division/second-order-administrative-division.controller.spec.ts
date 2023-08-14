@@ -11,7 +11,9 @@ describe('SecondOrderAdministrativeDivisionController', () => {
       providers: [SecondOrderAdministrativeDivisionService],
     }).compile();
 
-    controller = module.get<SecondOrderAdministrativeDivisionController>(SecondOrderAdministrativeDivisionController);
+    controller = module.get<SecondOrderAdministrativeDivisionController>(
+      SecondOrderAdministrativeDivisionController,
+    );
   });
 
   it('should be defined', () => {

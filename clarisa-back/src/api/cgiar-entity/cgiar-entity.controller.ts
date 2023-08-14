@@ -17,7 +17,6 @@ import { UpdateCgiarEntityDto } from './dto/update-cgiar-entity.dto';
 import { Response } from 'express';
 import { CgiarEntity } from './entities/cgiar-entity.entity';
 import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
-import { CgiarEntityTypeOption } from '../../shared/entities/enums/cgiar-entity-types';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)

@@ -9,7 +9,9 @@ describe('FirstOrderAdministrativeDivisionService', () => {
       providers: [FirstOrderAdministrativeDivisionService],
     }).compile();
 
-    service = module.get<FirstOrderAdministrativeDivisionService>(FirstOrderAdministrativeDivisionService);
+    service = module.get<FirstOrderAdministrativeDivisionService>(
+      FirstOrderAdministrativeDivisionService,
+    );
   });
 
   it('should be defined', () => {

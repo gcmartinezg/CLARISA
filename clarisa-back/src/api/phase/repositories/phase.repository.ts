@@ -7,10 +7,8 @@ import {
 } from 'typeorm';
 import { Phase } from '../entities/phase.entity';
 import { FindAllOptions } from '../../../shared/entities/enums/find-all-options';
-import { PhaseDto } from '../dto/phase.dto';
 import { PhaseStatus } from '../../../shared/entities/enums/phase-status';
 import { PRMSApplication } from '../../../shared/entities/enums/prms-applications';
-import { PhaseToc } from '../entities/phase-toc.entity';
 import { getMetadataArgsStorage } from 'typeorm';
 
 @Injectable()

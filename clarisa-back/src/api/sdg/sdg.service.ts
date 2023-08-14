@@ -11,7 +11,7 @@ export class SdgService {
 
   async findAll(
     option: FindAllOptions = FindAllOptions.SHOW_ONLY_ACTIVE,
-    isLegacy: boolean = false,
+    isLegacy = false,
   ) {
     let response: Sdg[];
     switch (option) {

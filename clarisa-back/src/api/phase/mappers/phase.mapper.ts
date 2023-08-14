@@ -4,8 +4,6 @@ import { PhaseDto } from '../dto/phase.dto';
 
 @Injectable()
 export class PhaseMapper {
-  constructor() {}
-
   public classToDto(phase: Phase): PhaseDto {
     const phaseDto: PhaseDto = new PhaseDto();
 
