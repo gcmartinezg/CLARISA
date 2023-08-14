@@ -4,8 +4,6 @@ import { ApiOST } from './api.ost';
 import { WorkpackageOstDto } from './dto/workpackage.ost.dto';
 import { InitiativeOstDto } from './dto/initivative.ost.dto';
 import { firstValueFrom } from 'rxjs';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { InitiativeStageOstDto } from './dto/initiative-stage.ost.dto';
 import { WorkpackageCountryOstDto } from './dto/workpackage-country.ost.dto';
 import { WorkpackageRegionOstDto } from './dto/workpackage-region.ost.dto';

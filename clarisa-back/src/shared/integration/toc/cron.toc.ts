@@ -39,7 +39,7 @@ export class CronTOC {
       const newPhasesToc = CronTOC.getNewPhases(oldPhasesDb, phasesToc);
 
       oldPhasesDb.forEach((op) => {
-        const updatedPhase = CronTOC.updatePhase(op, phasesToc);
+        CronTOC.updatePhase(op, phasesToc);
         updatedPhaseDb.push(op);
       });
 

@@ -11,7 +11,7 @@ export class AccountTypeService {
   constructor(
     private _accountTypeRepository: AccountTypeRepository,
     private _accountTypeMapper: AccountTypeMapper,
-  ) { }
+  ) {}
 
   async findAll(
     option: FindAllOptions = FindAllOptions.SHOW_ONLY_ACTIVE,

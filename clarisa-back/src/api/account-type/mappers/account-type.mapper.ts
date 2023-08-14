@@ -4,8 +4,6 @@ import { AccountType } from '../entities/account-type.entity';
 
 @Injectable()
 export class AccountTypeMapper {
-  constructor() {}
-
   classToDto(accountType: AccountType): AccountTypeDto {
     const accountTypeDto: AccountTypeDto = new AccountTypeDto();
 

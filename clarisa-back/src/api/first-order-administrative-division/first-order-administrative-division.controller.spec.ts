@@ -11,7 +11,9 @@ describe('FirstOrderAdministrativeDivisionController', () => {
       providers: [FirstOrderAdministrativeDivisionService],
     }).compile();
 
-    controller = module.get<FirstOrderAdministrativeDivisionController>(FirstOrderAdministrativeDivisionController);
+    controller = module.get<FirstOrderAdministrativeDivisionController>(
+      FirstOrderAdministrativeDivisionController,
+    );
   });
 
   it('should be defined', () => {

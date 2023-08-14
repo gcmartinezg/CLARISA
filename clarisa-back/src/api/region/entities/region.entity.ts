@@ -2,7 +2,6 @@ import { Exclude } from 'class-transformer';
 import {
   Column,
   Entity,
-  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,

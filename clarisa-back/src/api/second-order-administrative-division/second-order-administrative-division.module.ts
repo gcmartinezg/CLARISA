@@ -7,6 +7,10 @@ import { ApiGeoNames } from '../../shared/integration/ost/api.geonames';
 @Module({
   controllers: [SecondOrderAdministrativeDivisionController],
   imports: [HttpModule],
-  providers: [SecondOrderAdministrativeDivisionService, HttpModule, ApiGeoNames]
+  providers: [
+    SecondOrderAdministrativeDivisionService,
+    HttpModule,
+    ApiGeoNames,
+  ],
 })
-export class SecondOrderAdministrativeDivisionModule { }
+export class SecondOrderAdministrativeDivisionModule {}
