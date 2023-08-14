@@ -29,7 +29,7 @@ export class CronReporting {
   ): Promise<void> {
     const phasesRequest = await firstValueFrom(this.api.getPhases(app));
 
-    if (phasesRequest.status === HttpStatus.OK) {
+    if (phasesRequest && phasesRequest.status === HttpStatus.OK) {
       this.logger.debug(`Started ${app.prettyName} phases synchronization`);
       const appPhasesRepository = this.phaseRepository.phaseRepositories.get(
         app.tableName,
