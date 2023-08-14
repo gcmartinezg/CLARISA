@@ -47,7 +47,7 @@ export class CronOST {
       this.api.getWorkpackages(),
     );
 
-    if (workpackagesRequest.status === HttpStatus.OK) {
+    if (workpackagesRequest && workpackagesRequest.status === HttpStatus.OK) {
       this.logger.debug('Started workpackage synchronization');
       const oldWorkpackagesDb: Workpackage[] =
         await this.workpackageRepository.find();
@@ -481,7 +481,7 @@ export class CronOST {
   public async cronInitiativeRelatedData() {
     const initiativesRequest = await firstValueFrom(this.api.getInitiatives());
 
-    if (initiativesRequest.status === HttpStatus.OK) {
+    if (initiativesRequest && initiativesRequest.status === HttpStatus.OK) {
       this.logger.debug('Started initiative synchronization');
       const oldInitiativesDb: Initiative[] =
         await this.initiativeRepository.find();
