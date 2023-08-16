@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common/decorators';
 import {
   DataSource,
+  FindOptionsRelations,
   FindOptionsWhere,
   MoreThanOrEqual,
   Repository,
@@ -17,6 +18,14 @@ import { OldInstitution } from '../entities/old-institution.entity';
 
 @Injectable()
 export class OldInstitutionRepository extends Repository<OldInstitution> {
+  private readonly institutionRelations: FindOptionsRelations<OldInstitution> =
+    {
+      institution_type_object: true,
+      institution_locations: {
+        country_object: true,
+      },
+    };
+
   constructor(
     private dataSource: DataSource,
     private institutionLocationRepository: InstitutionLocationRepository,
@@ -55,27 +64,11 @@ export class OldInstitutionRepository extends Repository<OldInstitution> {
 
     const institutions: OldInstitution[] = await this.find({
       where: whereClause,
+      relations: this.institutionRelations,
     });
 
     await Promise.all(
       institutions.map(async (i) => {
-        i.institution_locations = await this.institutionLocationRepository.find(
-          {
-            where: {
-              auditableFields: { is_active: true },
-              institution_id: i.id,
-            },
-            relations: {
-              country_object: true,
-            },
-          },
-        );
-
-        i.institution_type_object =
-          await this.institutionTypeRepository.findOneBy({
-            id: i.institution_type_id,
-          });
-
         const institutionDto: InstitutionDto = this.fillOutInstitutionInfo(
           i,
           option === FindAllOptions.SHOW_ALL,
@@ -105,47 +98,30 @@ export class OldInstitutionRepository extends Repository<OldInstitution> {
         break;
     }
 
-    const institutions: OldInstitution[] = await this.find({
+    const oldInstitutions: OldInstitution[] = await this.find({
       where: whereClause,
+      relations: this.institutionRelations,
     });
 
-    return await Promise.all(
-      institutions.map(async (i) => {
-        i.institution_locations = await this.institutionLocationRepository.find(
-          {
-            where: {
-              auditableFields: { is_active: true },
-              institution_id: i.id,
-            },
-            relations: {
-              country_object: true,
-            },
-          },
-        );
+    return oldInstitutions.map((i) => {
+      const institutionDto: InstitutionSimpleDto = new InstitutionSimpleDto();
 
-        i.institution_type_object =
-          await this.institutionTypeRepository.findOneBy({
-            id: i.institution_type_id,
-          });
-        const institutionDto: InstitutionSimpleDto = new InstitutionSimpleDto();
+      institutionDto.code = i.id;
+      institutionDto.acronym = i.acronym;
 
-        institutionDto.code = i.id;
-        institutionDto.acronym = i.acronym;
+      const hq: InstitutionLocation = i.institution_locations.find(
+        (il) => il.is_headquater,
+      );
+      institutionDto.hqLocation = hq.country_object.name;
 
-        const hq: InstitutionLocation = i.institution_locations.find(
-          (il) => il.is_headquater,
-        );
-        institutionDto.hqLocation = hq.country_object.name;
+      institutionDto.hqLocationISOalpha2 = hq.country_object.iso_alpha_2;
+      institutionDto.institutionType = i.institution_type_object.name;
+      institutionDto.institutionTypeId = i.institution_type_object.id;
+      institutionDto.name = i.name;
+      institutionDto.websiteLink = i.website_link;
 
-        institutionDto.hqLocationISOalpha2 = hq.country_object.iso_alpha_2;
-        institutionDto.institutionType = i.institution_type_object.name;
-        institutionDto.institutionTypeId = i.institution_type_object.id;
-        institutionDto.name = i.name;
-        institutionDto.websiteLink = i.website_link;
-
-        return institutionDto;
-      }),
-    );
+      return institutionDto;
+    });
   }
 
   private fillOutInstitutionInfo(

@@ -9,6 +9,7 @@ import {
 import { AuditableEntity } from '../../../shared/entities/extends/auditable-entity.entity';
 import { Country } from '../../country/entities/country.entity';
 import { Institution } from './institution.entity';
+import { OldInstitution } from '../../old-institution/entities/old-institution.entity';
 
 @Entity('institution_locations')
 export class InstitutionLocation {
@@ -38,6 +39,10 @@ export class InstitutionLocation {
   @ManyToOne(() => Country, (c) => c.institution_locations)
   @JoinColumn({ name: 'country_id' })
   country_object: Country;
+
+  @ManyToOne(() => OldInstitution, (oi) => oi.institution_locations)
+  @JoinColumn({ name: 'institution_id' })
+  old_institution_object: OldInstitution;
 
   //auditable fields
 
