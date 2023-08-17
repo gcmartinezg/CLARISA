@@ -42,6 +42,7 @@ import axios from "axios";
 import { TocSdgsServices } from "./TocSdgsResults";
 import { TocResultImpactAreaServices } from "./TocImpactAreaResults";
 import { ActionAreaTocServices } from "./TocActionAreaResults";
+import { TocResultServices } from "./TocResultServices";
 
 export class TocServicesResults {
   public validatorType = new ValidatorTypes();
@@ -49,19 +50,18 @@ export class TocServicesResults {
   public tocSdgResults = new TocSdgsServices();
   public tocImpactAreas = new TocResultImpactAreaServices();
   public actionAreaToc = new ActionAreaTocServices();
-  
+  public resultsToc = new TocResultServices();
+  InformationSaving = null
   async queryTest() {
     let database = new Database();
     let dbConn: Connection = await database.getConnection();
 
     try {
       const queryRunner = dbConn.createQueryRunner();
+      let tocResultRepo = await dbConn.getRepository(TocResultsIndicators);
       await queryRunner.connect();
 
-      const getInitiatives = await queryRunner.query(`
-      SELECT * FROM toc_results
-
-      `);
+      const getInitiatives = await tocResultRepo.find();
 
       await queryRunner.release();
 
@@ -94,20 +94,22 @@ export class TocServicesResults {
             url: tocHost,
             timeout: 20000 // only wait for 2s
         });
-        let InformationSaving = null
+        
         if( this.validatorType.existPropertyInObjectMul(narrative.data, [
             "sdg_results",
             "impact_area_results",
             "action_area_results",
             "output_outcome_results",
           ])){
-            let sdgTocResults = await this.tocSdgResults.createTocSdgResults(narrative.data.sdg_results, idInitiativeToc);
-            let impactAreaTocResults = await this.tocImpactAreas.saveImpactAreaTocResult(narrative.data.impact_area_results, idInitiativeToc, sdgTocResults.sdgResults);
-            let actionAreaResults = await this.actionAreaToc.saveActionAreaToc(narrative.data.action_area_results, idInitiativeToc, impactAreaTocResults.listImpactAreaResults)
-            InformationSaving = {... sdgTocResults, ...impactAreaTocResults, ...actionAreaResults}
+            let sdgTocResults = await this.tocSdgResults.createTocSdgResults(narrative.data.sdg_results, idInitiativeToc, narrative.data.phase);
+            let impactAreaTocResults = await this.tocImpactAreas.saveImpactAreaTocResult(narrative.data.impact_area_results, idInitiativeToc, sdgTocResults.sdgResults, narrative.data.phase);
+            let actionAreaResults = await this.actionAreaToc.saveActionAreaToc(narrative.data.action_area_results, idInitiativeToc, impactAreaTocResults.listImpactAreaResults,narrative.data.phase)
+            let tocResult = await this.resultsToc.saveTocResults(narrative.data.output_outcome_results, sdgTocResults.sdgResults, actionAreaResults.actionAreaToc, impactAreaTocResults.listImpactAreaResults, idInitiativeToc, narrative.data.phase)
+            this.InformationSaving = {... sdgTocResults, ...impactAreaTocResults, ...actionAreaResults, ...tocResult}
         }
 
-        return InformationSaving;
+        await this.saveInDataBase();
+        return this.InformationSaving;
     } catch (error) {
         throw new Error(error);
     }
@@ -117,330 +119,23 @@ export class TocServicesResults {
 }
 
   
+async saveInDataBase(){
+  let database = new Database();
+  let dbConn: Connection = await database.getConnection();
+  let sdgRepo = await dbConn.getRepository(TocSdgResults);
 
 
+ 
+  
+
+}
   //mapping action areas results
 
 
   //mapping output_outcome_results
 
-  async saveOutputOutcomeResults(
-    outputOutcomeResults: any,
-    sdgResults: any,
-    impactAreaResults: any,
-    actionAreaResult: any,
-    id_toc_initiative: string
-  ) {
-    let listValidTocResult = [];
-    if (this.validatorType.validatorIsArray(outputOutcomeResults)) {
-      let con = 0;
-
-      outputOutcomeResults.forEach(async (element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "toc_result_id",
-            "result_type",
-            "wp_id",
-            "result_title",
-            "result_description",
-            "outcome_type",
-            "indicators",
-            "action_areas",
-            "impact_areas",
-            "sdgs",
-            "geo_scope",
-          ])
-        ) {
-          const outPutComeDto = new TocResultsDto();
-          outPutComeDto.toc_result_id =
-            typeof element.toc_result_id == "string"
-              ? element.toc_result_id
-              : null;
-          outPutComeDto.result_type =
-            typeof element.result_type == "number" ? element.result_type : null;
-          outPutComeDto.work_packages_id =
-            typeof element.wp_id == "number" ? element.wp_id : null;
-          outPutComeDto.result_title =
-            typeof element.result_title == "string"
-              ? element.result_title
-              : null;
-          outPutComeDto.result_description =
-            typeof element.result_description == "string"
-              ? element.result_description
-              : null;
-          outPutComeDto.outcome_type =
-            typeof element.outcome_type == "string"
-              ? element.outcome_type
-              : null;
-          outPutComeDto.is_active = true;
-          outPutComeDto.is_global = true;
-          outPutComeDto.id_toc_initiative = id_toc_initiative;
-          //this.validatorType.deletebyAllRelationOutcome(element.toc_result_id);
-          const relation = await this.relationTocResults(
-            element,
-            element.toc_result_id,
-            sdgResults,
-            impactAreaResults,
-            actionAreaResult
-          );
-          listValidTocResult.push({
-            outcome: outPutComeDto,
-            relation: relation,
-          });
-        }
-      });
-    }
-    return listValidTocResult;
-  }
-
-  async relationTocResults(
-    outputOutcomeResults: any,
-    toc_results_id: string,
-    sdgResults: any,
-    impactAreaResults: any,
-    actionAreaResult: any
-  ) {
-    let listValidActionArea = [];
-    let listValidSdg = [];
-    let listValidImpact = [];
-    let listValidIndicator = [];
-    let listValidRegions = [];
-    let listValidCountry = [];
-    if (
-      this.validatorType.validatorIsArray(outputOutcomeResults.action_areas)
-    ) {
-      outputOutcomeResults.action_areas.forEach((element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "toc_result_id",
-            "active",
-          ])
-        ) {
-          const tocResultAction = new TocResultsActionAreaResultsDto();
-          tocResultAction.toc_result_id = toc_results_id;
-          tocResultAction.action_area_toc_result_id =
-            typeof element.toc_result_id == "string" &&
-            this.validatorType.validExistIdAction(
-              actionAreaResult,
-              element.toc_result_id
-            )
-              ? element.toc_result_id
-              : null;
-          //tocResultAction.is_active = typeof element.active == 'boolean'? element.active : null;
-          if (this.validatorType.validExistNull(tocResultAction)) {
-            listValidActionArea.push(tocResultAction);
-          }
-        }
-      });
-    }
-    if (
-      this.validatorType.validatorIsArray(outputOutcomeResults.impact_areas)
-    ) {
-      outputOutcomeResults.impact_areas.forEach((element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "toc_result_id",
-            "active",
-          ])
-        ) {
-          const tocResultImpact = new TocResultsImpactAreaResultsDto();
-          tocResultImpact.toc_result_id = toc_results_id;
-          tocResultImpact.impact_area_toc_result_id =
-            typeof element.toc_result_id == "string" &&
-            this.validatorType.validExistIdImpact(
-              impactAreaResults,
-              element.toc_result_id
-            )
-              ? element.toc_result_id
-              : null;
-          tocResultImpact.is_active =
-            typeof element.active == "boolean" ? element.active : null;
-          if (this.validatorType.validExistNull(tocResultImpact)) {
-            listValidImpact.push(tocResultImpact);
-          }
-        }
-      });
-    }
-    if (this.validatorType.validatorIsArray(outputOutcomeResults.sdgs)) {
-      outputOutcomeResults.sdgs.forEach((element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "toc_result_id",
-            "active",
-          ])
-        ) {
-          const tocResultSdg = new TocResultsSdgResultsDto();
-          tocResultSdg.toc_result_id = toc_results_id;
-          tocResultSdg.sdg_toc_result_id =
-            typeof element.toc_result_id == "string" &&
-            this.validatorType.validExistId(sdgResults, element.toc_result_id)
-              ? element.toc_result_id
-              : null;
-          tocResultSdg.is_active =
-            typeof element.active == "boolean" ? element.active : null;
-          if (this.validatorType.validExistNull(tocResultSdg)) {
-            listValidSdg.push(tocResultSdg);
-          }
-        }
-      });
-    }
-    if (this.validatorType.validatorIsArray(outputOutcomeResults.indicators)) {
-      outputOutcomeResults.indicators.forEach((element) => {
-        if (
-          this.validatorType.existPropertyInObjectMul(element, [
-            "unit_of_measurement",
-            "description",
-            "location",
-            "data_collection_source",
-            "baseline",
-            "id",
-            "type",
-            "data_collection_frequency",
-            "data_collection_method",
-            "target",
-          ])
-        ) {
-          const tocResultIndicator = new TocResultsIndicatorsDto();
-          tocResultIndicator.toc_result_indicator_id =
-            typeof element.id == "string" ? element.id : null;
-          tocResultIndicator.toc_result_id = toc_results_id;
-          tocResultIndicator.indicator_description =
-            typeof element.description == "string" ? element.description : null;
-          tocResultIndicator.unit_messurament =
-            typeof element.unit_of_measurement == "string"
-              ? element.unit_of_measurement
-              : null;
-          tocResultIndicator.baseline_date =
-            typeof element.baseline.date == "string"
-              ? element.baseline.date
-              : null;
-          tocResultIndicator.baseline_value =
-            typeof element.baseline.value == "string"
-              ? element.baseline.value
-              : null;
-          tocResultIndicator.data_collection_method =
-            typeof element.data_collection_method == "string"
-              ? element.data_collection_method
-              : null;
-          tocResultIndicator.data_colletion_source =
-            typeof element.data_collection_source == "string"
-              ? element.data_collection_source
-              : null;
-          tocResultIndicator.frequency_data_collection =
-            typeof element.data_collection_frequency == "string"
-              ? element.data_collection_frequency
-              : null;
-          tocResultIndicator.type_value =
-            typeof element.type.name == "string" ? element.location : null;
-          tocResultIndicator.location =
-            typeof element.location == "string" ? element.location : null;
-          tocResultIndicator.target_date =
-            typeof element.target.date == "string" ? element.target.date : null;
-          tocResultIndicator.target_value =
-            typeof element.target.value == "string"
-              ? element.target.value
-              : null;
-          tocResultIndicator.is_active = true;
-          if (
-            this.validatorType.existPropertyInObjectMul(element, [
-              "country",
-              "region",
-            ])
-          ) {
-            let countries = "";
-            let regions = "";
-            if (this.validatorType.validatorIsArray(element.country)) {
-              element.country.forEach((elements) => {
-                countries += elements.code + ",";
-              });
-              tocResultIndicator.countries_id = countries;
-            }
-            if (this.validatorType.validatorIsArray(element.region)) {
-              element.region.forEach((elements) => {
-                regions += elements.um49Code + ",";
-              });
-              tocResultIndicator.regions_id = regions;
-            }
-          }
-          listValidIndicator.push(tocResultIndicator);
-        }
-      });
-    }
-    if (
-      this.validatorType.existPropertyInObject(
-        outputOutcomeResults,
-        "geo_scope"
-      )
-    ) {
-      if (
-        this.validatorType.validatorIsObject(outputOutcomeResults.geo_scope) &&
-        this.validatorType.validatorIsArray(outputOutcomeResults.geo_scope) ==
-          false
-      ) {
-        if (
-          this.validatorType.validatorIsArray(
-            outputOutcomeResults.geo_scope.regions
-          )
-        ) {
-          outputOutcomeResults.geo_scope.regions.forEach((element) => {
-            if (
-              this.validatorType.existPropertyInObjectMul(element, [
-                "region_id",
-                "active",
-              ])
-            ) {
-              const tocResultRegions = new TocResultsRegionsDto();
-              tocResultRegions.toc_result_id = toc_results_id;
-              tocResultRegions.clarisa_regions_id =
-                typeof element.region_id == "number" ? element.region_id : null;
-              tocResultRegions.is_active =
-                typeof element.active == "boolean" ? element.active : null;
-              if (this.validatorType.validExistNull(tocResultRegions)) {
-                listValidRegions.push(tocResultRegions);
-              }
-            }
-          });
-        }
-        if (
-          this.validatorType.validatorIsArray(
-            outputOutcomeResults.geo_scope.countries
-          )
-        ) {
-          outputOutcomeResults.geo_scope.countries.forEach((element) => {
-            if (
-              this.validatorType.existPropertyInObjectMul(element, [
-                "country_id",
-                "active",
-              ])
-            ) {
-              const tocResultcountries = new TocResultsCountriesDto();
-              tocResultcountries.toc_result_id = toc_results_id;
-              tocResultcountries.clarisa_countries_id =
-                typeof element.country_id == "number"
-                  ? element.country_id
-                  : null;
-              tocResultcountries.is_active =
-                typeof element.active == "boolean" ? element.active : null;
-              if (this.validatorType.validExistNull(tocResultcountries)) {
-                listValidCountry.push(tocResultcountries);
-              }
-            }
-          });
-        }
-      }
-    }
-
-    return {
-      action_area: listValidActionArea,
-      impact_area: listValidImpact,
-      sdg: listValidSdg,
-      indicator: listValidIndicator,
-      regions: listValidRegions,
-      countries: listValidCountry,
-    };
-  }
-
-  //save in data base
+  
+  /*//save in data base
   async mappingSaveDb(
     outputOutcomeResults: any,
     sdgResults: any,
@@ -550,7 +245,7 @@ export class TocServicesResults {
       },
     };
   }
-/*
+
   async saveInDataBase(
     outputOutcomeResults: any,
     sdgResults: any,

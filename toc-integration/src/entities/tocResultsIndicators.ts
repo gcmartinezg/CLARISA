@@ -5,7 +5,7 @@ export class TocResultsIndicators{
     @PrimaryGeneratedColumn()
     toc_result_indicator_id : string;
     @Column()
-    toc_result_id: string;
+    toc_results_id: number;
     @Column()
     indicator_description:string;
     @Column()
@@ -15,11 +15,11 @@ export class TocResultsIndicators{
     @Column()
     baseline_value:string;
     @Column()
-    baseline_date:Date;
+    baseline_date:string;
     @Column()
     target_value:string;
     @Column()
-    target_date:Date;
+    target_date:string;
     @Column()
     data_colletion_source:string;
     @Column()
@@ -29,9 +29,15 @@ export class TocResultsIndicators{
     @Column()
     location:string;
     @Column()
-    countries_id:string;
-    @Column()
-    regions_id:string;
-    @Column()
     is_active:boolean;
+    @Column()
+    toc_result_id_toc:string;
+    @Column()
+    main:boolean;
+    @Column()
+    create_date:string;
+    @Column()
+    type_name:string;
+    @Column()
+    related_node_id:string;
 }

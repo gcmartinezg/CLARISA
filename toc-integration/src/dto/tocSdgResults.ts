@@ -8,4 +8,6 @@ export class CreateSdgResultsDto{
   is_active: boolean;
 
   id_toc_initiative:string;
+
+  phase:string;
 }

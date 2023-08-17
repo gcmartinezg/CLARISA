@@ -1,5 +1,9 @@
 export class TocImpactAreaResultsGlobalTargetsDto{
-    impact_area_toc_result_id : string;
-    global_target_id: number;
+    toc_impact_area_results_id : number;
+    
+    global_targets_id: number;
+    
     is_active:boolean;
+    
+    toc_impact_area_results_id_toc:string;
 }
