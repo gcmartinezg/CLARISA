@@ -54,7 +54,7 @@ export class ValidatorTypes {
   validExistId(object: any, id: string) {
     let estado = false;
     object.forEach((element) => {
-      if (id.localeCompare(element.sdg_results.toc_result_id) == 0) {
+      if (id.localeCompare(element.toc_result_id) == 0) {
         estado = true;
       }
     });
@@ -64,7 +64,7 @@ export class ValidatorTypes {
   validExistIdImpact(object: any, id: string) {
     let estado = false;
     object.forEach((element) => {
-      if (id.localeCompare(element.impact_area.toc_result_id) == 0) {
+      if (id.localeCompare(element.toc_result_id) == 0) {
         estado = true;
       }
     });
@@ -74,7 +74,7 @@ export class ValidatorTypes {
   validExistIdAction(object: any, id: string) {
     let estado = false;
     object.forEach((element) => {
-      if (id.localeCompare(element.action_area.toc_result_id) == 0) {
+      if (id.localeCompare(element.toc_result_id) == 0) {
         estado = true;
       }
     });
