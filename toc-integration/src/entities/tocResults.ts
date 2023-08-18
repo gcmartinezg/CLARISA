@@ -24,5 +24,6 @@ export class TocResults{
     work_packages_id:number;
     @Column()
     id_toc_initiative:string;
-    
+    @Column()
+    version_id :string;
 }

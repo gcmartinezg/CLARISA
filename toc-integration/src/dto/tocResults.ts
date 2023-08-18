@@ -20,4 +20,6 @@ export class TocResultsDto{
     work_packages_id:number;
     
     id_toc_initiative:string;
+
+    version_id :string;
 }

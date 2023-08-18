@@ -104,7 +104,7 @@ export class TocServicesResults {
             let sdgTocResults = await this.tocSdgResults.createTocSdgResults(narrative.data.sdg_results, idInitiativeToc, narrative.data.phase);
             let impactAreaTocResults = await this.tocImpactAreas.saveImpactAreaTocResult(narrative.data.impact_area_results, idInitiativeToc, sdgTocResults.sdgResults, narrative.data.phase);
             let actionAreaResults = await this.actionAreaToc.saveActionAreaToc(narrative.data.action_area_results, idInitiativeToc, impactAreaTocResults.listImpactAreaResults,narrative.data.phase)
-            let tocResult = await this.resultsToc.saveTocResults(narrative.data.output_outcome_results, sdgTocResults.sdgResults, actionAreaResults.actionAreaToc, impactAreaTocResults.listImpactAreaResults, idInitiativeToc, narrative.data.phase)
+            let tocResult = await this.resultsToc.saveTocResults(narrative.data.output_outcome_results, sdgTocResults.sdgResults, actionAreaResults.actionAreaToc, impactAreaTocResults.listImpactAreaResults, idInitiativeToc, narrative.data.phase, narrative.data.version_id)
             this.InformationSaving = {... sdgTocResults, ...impactAreaTocResults, ...actionAreaResults, ...tocResult}
         }
 

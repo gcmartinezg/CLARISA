@@ -44,7 +44,7 @@ export class TocResultServices{
     public validatorType = new ValidatorTypes();
     public errorMessage = new ErrorValidators();
     public database = new Database();
-    async saveTocResults(toc_results:any, sdg_results:any, action_results:any, impact_results:any, id_toc_init:string, phase){
+    async saveTocResults(toc_results:any, sdg_results:any, action_results:any, impact_results:any, id_toc_init:string, phase, version_id){
 
         try {
             let dbConn: Connection = await this.database.getConnection();
@@ -73,6 +73,7 @@ export class TocResultServices{
                         tocResult.is_active = true;
                         tocResult.id_toc_initiative = id_toc_init;
                         tocResult.phase = phase;
+                        tocResult.version_id = version_id;
                         const existingRecord = await tocResultRepo.findOne({ toc_result_id: tocResult.toc_result_id, phase: tocResult.phase });
                         if (existingRecord) {
                           // Update existing record
