@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { InitiativeService } from './initiative.service';
 import { InitiativeController } from './initiative.controller';
 import { InitiativeRepository } from './repositories/initiative.repository';
-import { InitiativeStageRepository } from './repositories/initiative-status.repository';
+import { InitiativeStageRepository } from './repositories/initiative-stage.repository';
 import { StageRepository } from './repositories/status.repository';
 
 @Module({

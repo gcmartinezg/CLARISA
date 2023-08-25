@@ -1,11 +1,11 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { AuditableEntity } from '../../../shared/entities/extends/auditable-entity.entity';
-import { InitiativeStage } from './initiative-status.entity';
+import { InitiativeStage } from './initiative-stage.entity';
 
 @Entity('submission_tool_initiatives')
 export class Initiative {
-  @PrimaryGeneratedColumn({ type: 'bigint' })
+  @PrimaryColumn({ type: 'bigint', nullable: false })
   id: number;
 
   @Column({ type: 'text', nullable: true })

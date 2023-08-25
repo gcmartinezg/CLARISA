@@ -1,7 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { CountryRepository } from '../../api/country/repositories/country.repository';
-import { InitiativeStageRepository } from '../../api/initiative/repositories/initiative-status.repository';
+import { InitiativeStageRepository } from '../../api/initiative/repositories/initiative-stage.repository';
 import { InitiativeRepository } from '../../api/initiative/repositories/initiative.repository';
 import { StageRepository } from '../../api/initiative/repositories/status.repository';
 import { RegionRepository } from '../../api/region/repositories/region.repository';
