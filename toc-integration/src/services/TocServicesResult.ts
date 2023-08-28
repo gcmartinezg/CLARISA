@@ -43,6 +43,7 @@ import { TocSdgsServices } from "./TocSdgsResults";
 import { TocResultImpactAreaServices } from "./TocImpactAreaResults";
 import { ActionAreaTocServices } from "./TocActionAreaResults";
 import { TocResultServices } from "./TocResultServices";
+import { sendSlackNotification } from "../validators/slackNotification";
 
 export class TocServicesResults {
   public validatorType = new ValidatorTypes();
@@ -88,6 +89,24 @@ export class TocServicesResults {
   async splitInformation(idInitiativeToc:string){
     let tocHost = await 'https://toc.loc.codeobia.com/api/toc/'+idInitiativeToc+'/dashboard-result';
 
+
+    let database = new Database();
+    let dbConn: Connection = await database.getConnection();
+    const queryRunner = await dbConn.createQueryRunner();
+    await queryRunner.connect();
+
+    const getInitOfficialCodeQuery =`
+      SELECT 
+        *
+      FROM 
+        prdb.clarisa_initiatives ci
+      WHERE
+        ci.toc_id = ?
+    `;
+    
+    const getInit = await queryRunner.query(getInitOfficialCodeQuery, [idInitiativeToc]);
+    const officialCode = getInit[0]?.official_code;
+
     try {
         const narrative =  await axios({
             method: 'get',
@@ -111,6 +130,7 @@ export class TocServicesResults {
         await this.saveInDataBase();
         return this.InformationSaving;
     } catch (error) {
+        sendSlackNotification(officialCode)
         throw new Error(error);
     }
     
