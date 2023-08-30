@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { RespondRequestDto } from '../../shared/entities/dtos/respond-request.dto';
-import { ResponseDto } from '../../shared/entities/dtos/response-dto';
+import { ResponseDto } from '../../shared/entities/dtos/response.dto';
 import { MisOption } from '../../shared/entities/enums/mises-options';
 import { PartnerStatus } from '../../shared/entities/enums/partner-status';
 import { UserData } from '../../shared/interfaces/user-data';

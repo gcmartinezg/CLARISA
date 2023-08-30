@@ -17,7 +17,7 @@ import { CreateCountryOfficeRequestDto } from './dto/create-country-office-reque
 import { RespondRequestDto } from '../../shared/entities/dtos/respond-request.dto';
 import { UpdateCountryOfficeRequestDto } from './dto/update-country-office-request.dto';
 import { GetUserData } from '../../shared/decorators/user-data.decorator';
-import { ResponseDto } from '../../shared/entities/dtos/response-dto';
+import { ResponseDto } from '../../shared/entities/dtos/response.dto';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
 import { PermissionGuard } from '../../shared/guards/permission.guard';
 import { UserData } from '../../shared/interfaces/user-data';
