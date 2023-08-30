@@ -5,7 +5,7 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RouterModule } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR, RouterModule } from '@nestjs/core';
 import { ApiModule } from './api/api.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -17,6 +17,9 @@ import { dataSource } from './ormconfig';
 import { AuthModule } from './auth/auth.module';
 import { GuardsModule } from './shared/guards/guards.module';
 import { BasicAuthMiddleware } from './shared/guards/basic-auth.middleware';
+import { RequestLoggingInterceptor } from './shared/interceptors/request-logging.interceptor';
+import { ResponseFormattingInterceptor } from './shared/interceptors/response-formatting.interceptor';
+import { ExceptionsFilter } from './shared/filters/exceptions.filter';
 
 @Module({
   imports: [
@@ -34,7 +37,21 @@ import { BasicAuthMiddleware } from './shared/guards/basic-auth.middleware';
     GuardsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: ExceptionsFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: RequestLoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseFormattingInterceptor,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

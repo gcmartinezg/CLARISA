@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { GetUserData } from '../shared/decorators/user-data.decorator';
-import { ResponseDto } from '../shared/entities/dtos/response-dto';
+import { ResponseDto } from '../shared/entities/dtos/response.dto';
 import { JwtAuthGuard } from '../shared/guards/jwt-auth.guard';
 import { PermissionGuard } from '../shared/guards/permission.guard';
 import { UserData } from '../shared/interfaces/user-data';
