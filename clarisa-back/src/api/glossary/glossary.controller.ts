@@ -44,9 +44,8 @@ export class GlossaryController {
     @Body() updateGlossaryDto: UpdateGlossaryDto[],
   ) {
     try {
-      const result: Glossary[] = await this.glossaryService.update(
-        updateGlossaryDto,
-      );
+      const result: Glossary[] =
+        await this.glossaryService.update(updateGlossaryDto);
       return res.status(HttpStatus.OK).json(result);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

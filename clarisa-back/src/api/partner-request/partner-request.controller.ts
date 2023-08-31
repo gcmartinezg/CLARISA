@@ -98,9 +98,8 @@ export class PartnerRequestController {
   @Post('create-bulk')
   @UseGuards(JwtAuthGuard, PermissionGuard)
   async createBulk(@Body() createBulkPartner: BulkPartnerRequestDto) {
-    const result: any = await this.partnerRequestService.createBulk(
-      createBulkPartner,
-    );
+    const result: any =
+      await this.partnerRequestService.createBulk(createBulkPartner);
     return result;
   }
 }

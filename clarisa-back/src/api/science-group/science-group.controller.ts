@@ -39,9 +39,8 @@ export class ScienceGroupController {
     @Body() updateUserDtoList: UpdateScienceGroupDto[],
   ) {
     try {
-      const result: ScienceGroup[] = await this.scienceGroupService.update(
-        updateUserDtoList,
-      );
+      const result: ScienceGroup[] =
+        await this.scienceGroupService.update(updateUserDtoList);
       return res.status(HttpStatus.OK).json(result);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

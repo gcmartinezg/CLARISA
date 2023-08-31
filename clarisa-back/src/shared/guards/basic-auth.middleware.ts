@@ -5,7 +5,10 @@ import { NextFunction, Request, Response } from 'express';
 
 @Injectable()
 export class BasicAuthMiddleware implements NestMiddleware {
-  constructor(private moduleRef: ModuleRef, private authService: AuthService) {}
+  constructor(
+    private moduleRef: ModuleRef,
+    private authService: AuthService,
+  ) {}
 
   async use(
     @Req() request: Request,

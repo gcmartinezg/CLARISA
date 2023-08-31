@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { ResponseDto } from '../entities/dtos/response.dto';
 import { FinalResponseDto } from '../entities/dtos/final-response.dto';
 

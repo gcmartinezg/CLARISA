@@ -255,9 +255,8 @@ export class CronOST {
         updatedWorkpackagesDb,
       );
 
-      newWorkpackagesDb = await this.workpackageRepository.save(
-        newWorkpackagesDb,
-      );
+      newWorkpackagesDb =
+        await this.workpackageRepository.save(newWorkpackagesDb);
 
       newWorkpackagesDb.forEach((nw) => {
         nw.countries.forEach((nwc) => {
@@ -545,9 +544,8 @@ export class CronOST {
         newInitiativesDb.push(newInitiative);
       });
 
-      updatedInitiativesDb = await this.initiativeRepository.save(
-        updatedInitiativesDb,
-      );
+      updatedInitiativesDb =
+        await this.initiativeRepository.save(updatedInitiativesDb);
 
       newInitiativesDb = await this.initiativeRepository.save(newInitiativesDb);
 

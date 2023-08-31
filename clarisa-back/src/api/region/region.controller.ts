@@ -45,9 +45,8 @@ export class RegionController {
     @Body() updateRegionDtoList: UpdateRegionDto[],
   ) {
     try {
-      const result: Region[] = await this.regionService.update(
-        updateRegionDtoList,
-      );
+      const result: Region[] =
+        await this.regionService.update(updateRegionDtoList);
       return res.status(HttpStatus.OK).json(result);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
