@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AuditableEntity } from '../../../shared/entities/extends/auditable-entity.entity';
-import { InitiativeStage } from '../../initiative/entities/initiative-status.entity';
+import { InitiativeStage } from '../../initiative/entities/initiative-stage.entity';
 import { WorkpackageCountry } from './workpackage-country.entity';
 import { WorkpackageRegion } from './workpackage-region.entity';
 

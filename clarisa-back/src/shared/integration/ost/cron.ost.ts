@@ -11,14 +11,14 @@ import { WorkpackageRepository } from '../../../api/workpackage/repositories/wor
 import { InitiativeRepository } from '../../../api/initiative/repositories/initiative.repository';
 import { CountryRepository } from '../../../api/country/repositories/country.repository';
 import { RegionRepository } from '../../../api/region/repositories/region.repository';
-import { InitiativeStage } from '../../../api/initiative/entities/initiative-status.entity';
+import { InitiativeStage } from '../../../api/initiative/entities/initiative-stage.entity';
 import { WorkpackageCountry } from '../../../api/workpackage/entities/workpackage-country.entity';
 import { WorkpackageRegion } from '../../../api/workpackage/entities/workpackage-region.entity';
 import { Workpackage } from '../../../api/workpackage/entities/workpackage.entity';
 import { Region } from '../../../api/region/entities/region.entity';
 import { Country } from '../../../api/country/entities/country.entity';
 import { Initiative } from '../../../api/initiative/entities/initiative.entity';
-import { InitiativeStageRepository } from '../../../api/initiative/repositories/initiative-status.repository';
+import { InitiativeStageRepository } from '../../../api/initiative/repositories/initiative-stage.repository';
 import { WorkpackageCountryRepository } from '../../../api/workpackage/repositories/workpackage-country.repository';
 import { WorkpackageRegionRepository } from '../../../api/workpackage/repositories/workpackage-country.repository copy';
 import { AuditableEntity } from '../../entities/extends/auditable-entity.entity';
@@ -589,6 +589,7 @@ export class CronOST {
     newInitiative.auditableFields.created_at = new Date();
     newInitiative.auditableFields.created_by = 3043; //clarisadmin
     newInitiative.auditableFields.is_active = ostInitiative.active === 1;
+    newInitiative.id = ostInitiative.id;
     newInitiative.name = ostInitiative.name;
     newInitiative.official_code = ostInitiative.official_code;
     newInitiative.short_name = ostInitiative.acronym ?? '';

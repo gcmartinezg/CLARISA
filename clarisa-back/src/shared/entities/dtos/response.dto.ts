@@ -11,11 +11,23 @@ export class ResponseDto<T> {
     this.status = status;
   }
 
+  public static getResponse<T>(responseDto: ResponseDto<T>): T {
+    return responseDto.response;
+  }
+
+  public static getMessage(responseDto: ResponseDto<any>): string {
+    return responseDto.message;
+  }
+
+  public static getStatus(responseDto: ResponseDto<any>): HttpStatus {
+    return responseDto.status;
+  }
+
   static createCreatedResponse<T>(
     response: T,
     serviceConstructor: Function,
   ): ResponseDto<T> {
-    return ResponseDto.createResponse(
+    return ResponseDto.createCustomResponse(
       response,
       `${serviceConstructor.name.replace(
         'Service',
@@ -29,7 +41,7 @@ export class ResponseDto<T> {
     response: T,
     serviceConstructor: Function,
   ): ResponseDto<T> {
-    return ResponseDto.createResponse(
+    return ResponseDto.createCustomResponse(
       response,
       `${serviceConstructor.name.replace(
         'Service',
@@ -39,7 +51,15 @@ export class ResponseDto<T> {
     );
   }
 
-  static createResponse<T>(
+  static createOkResponse<T>(response: T, message?: string): ResponseDto<T> {
+    return ResponseDto.createCustomResponse(
+      response,
+      message || 'Success',
+      HttpStatus.OK,
+    );
+  }
+
+  static createCustomResponse<T>(
     response: T,
     message: string,
     status: HttpStatus,

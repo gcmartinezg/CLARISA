@@ -2,7 +2,7 @@ import { Exclude } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { AuditableEntity } from '../../../shared/entities/extends/auditable-entity.entity';
 import { ActionAreaOutcomeIndicator } from '../../action-area-outcome-indicator/entities/action-area-outcome-indicator.entity';
-import { InitiativeStage } from '../../initiative/entities/initiative-status.entity';
+import { InitiativeStage } from '../../initiative/entities/initiative-stage.entity';
 
 @Entity('action_areas')
 export class ActionArea {

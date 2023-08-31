@@ -13,7 +13,7 @@ import { RespondRequestDto } from '../../shared/entities/dtos/respond-request.dt
 import { UpdateCountryOfficeRequestDto } from './dto/update-country-office-request.dto';
 import { CountryOfficeRequest } from './entities/country-office-request.entity';
 import { CountryOfficeRequestRepository } from './repositories/country-office-request.repository';
-import { ResponseDto } from '../../shared/entities/dtos/response-dto';
+import { ResponseDto } from '../../shared/entities/dtos/response.dto';
 import { MisOption } from '../../shared/entities/enums/mises-options';
 import { PartnerStatus } from '../../shared/entities/enums/partner-status';
 import { UserData } from '../../shared/interfaces/user-data';

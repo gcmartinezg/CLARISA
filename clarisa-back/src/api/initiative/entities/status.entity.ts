@@ -1,7 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { AuditableEntity } from '../../../shared/entities/extends/auditable-entity.entity';
-import { InitiativeStage } from './initiative-status.entity';
+import { InitiativeStage } from './initiative-stage.entity';
 
 @Entity('submission_tool_stages')
 export class Stage {
