@@ -79,12 +79,7 @@ export class CountryOfficeRequestService {
     });
 
     if (validationErrors.length > 0) {
-      throw new HttpException(
-        HttpException.createBody(
-          ResponseDto.createBadResponse(validationErrors, this.constructor),
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw ResponseDto.createBadResponse(validationErrors, this.constructor);
     }
 
     //Comprehensive validations
@@ -139,12 +134,7 @@ export class CountryOfficeRequestService {
     );
 
     if (validationErrors.length > 0) {
-      throw new HttpException(
-        HttpException.createBody(
-          ResponseDto.createBadResponse(validationErrors, this.constructor),
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw ResponseDto.createBadResponse(validationErrors, this.constructor);
     }
 
     const newCountryOfficeRequests: CountryOfficeRequest[] = await Promise.all(
@@ -193,12 +183,7 @@ export class CountryOfficeRequestService {
     });
 
     if (validationErrors.length > 0) {
-      throw new HttpException(
-        HttpException.createBody(
-          ResponseDto.createBadResponse(validationErrors, this.constructor),
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw ResponseDto.createBadResponse(validationErrors, this.constructor);
     }
 
     //Comprehensive validations
@@ -224,12 +209,7 @@ export class CountryOfficeRequestService {
     }
 
     if (validationErrors.length > 0) {
-      throw new HttpException(
-        HttpException.createBody(
-          ResponseDto.createBadResponse(validationErrors, this.constructor),
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw ResponseDto.createBadResponse(validationErrors, this.constructor);
     }
 
     const now = new Date();
@@ -274,12 +254,7 @@ export class CountryOfficeRequestService {
     ).flatMap((e) => Object.values(e.constraints).map((m) => m));
 
     if (validationErrors.length > 0) {
-      throw new HttpException(
-        HttpException.createBody(
-          ResponseDto.createBadResponse(validationErrors, this.constructor),
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw ResponseDto.createBadResponse(validationErrors, this.constructor);
     }
 
     //Comprehensive validations
@@ -323,12 +298,7 @@ export class CountryOfficeRequestService {
     }
 
     if (validationErrors.length > 0) {
-      throw new HttpException(
-        HttpException.createBody(
-          ResponseDto.createBadResponse(validationErrors, this.constructor),
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw ResponseDto.createBadResponse(validationErrors, this.constructor);
     }
 
     const response: CountryOfficeRequestDto =
