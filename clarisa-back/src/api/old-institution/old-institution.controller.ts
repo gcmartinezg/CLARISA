@@ -44,9 +44,8 @@ export class OldInstitutionController {
     @Body() updateUserDtoList: UpdateOldInstitutionDto[],
   ) {
     try {
-      const result: OldInstitution[] = await this.oldInstitutionService.update(
-        updateUserDtoList,
-      );
+      const result: OldInstitution[] =
+        await this.oldInstitutionService.update(updateUserDtoList);
       return res.status(HttpStatus.OK).json(result);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

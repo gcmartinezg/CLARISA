@@ -8,7 +8,10 @@ import { IS_CLARISA_PAGE } from '../decorators/clarisa-page.decorator';
 @Injectable()
 export class PermissionGuard implements CanActivate {
   private userService: UserService;
-  constructor(private reflector: Reflector, private moduleRef: ModuleRef) {
+  constructor(
+    private reflector: Reflector,
+    private moduleRef: ModuleRef,
+  ) {
     this.userService = this.moduleRef.get(UserService, { strict: false });
   }
 

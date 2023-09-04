@@ -40,9 +40,8 @@ export class AccountController {
     @Body() updateUserDtoList: UpdateAccountDto[],
   ) {
     try {
-      const result: Account[] = await this.accountService.update(
-        updateUserDtoList,
-      );
+      const result: Account[] =
+        await this.accountService.update(updateUserDtoList);
       return res.status(HttpStatus.OK).json(result);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

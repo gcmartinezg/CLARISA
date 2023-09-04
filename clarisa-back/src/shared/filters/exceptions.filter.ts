@@ -1,10 +1,4 @@
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { FinalResponseDto } from '../entities/dtos/final-response.dto';
 

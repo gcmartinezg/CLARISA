@@ -39,9 +39,8 @@ export class CountryController {
     @Body() updateCountryDtoList: UpdateCountryDto[],
   ) {
     try {
-      const result: Country[] = await this.countryService.update(
-        updateCountryDtoList,
-      );
+      const result: Country[] =
+        await this.countryService.update(updateCountryDtoList);
       return res.status(HttpStatus.OK).json(result);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

@@ -5,7 +5,7 @@ import {
   CallHandler,
   Logger,
 } from '@nestjs/common';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable()

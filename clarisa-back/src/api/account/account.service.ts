@@ -20,9 +20,8 @@ export class AccountService {
       throw Error('?!');
     }
 
-    const accounts: Account[] = await this._accountRepository.findAllAccounts(
-      option,
-    );
+    const accounts: Account[] =
+      await this._accountRepository.findAllAccounts(option);
     const accountDtos: AccountDto[] = accounts.map((a) =>
       this._accountMapper.classToDto(a),
     );

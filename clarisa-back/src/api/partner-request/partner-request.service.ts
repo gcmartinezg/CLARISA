@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { RespondRequestDto } from '../../shared/entities/dtos/respond-request.dto';
@@ -80,12 +80,7 @@ export class PartnerRequestService {
     });
 
     if (validationErrors.length > 0) {
-      throw new HttpException(
-        HttpException.createBody(
-          ResponseDto.createBadResponse(validationErrors, this.constructor),
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw ResponseDto.createBadResponse(validationErrors, this.constructor);
     }
 
     //Comprehensive validations
@@ -143,12 +138,7 @@ export class PartnerRequestService {
     }
 
     if (validationErrors.length > 0) {
-      throw new HttpException(
-        HttpException.createBody(
-          ResponseDto.createBadResponse(validationErrors, this.constructor),
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw ResponseDto.createBadResponse(validationErrors, this.constructor);
     }
 
     const response: PartnerRequestDto =
@@ -182,12 +172,7 @@ export class PartnerRequestService {
     });
 
     if (validationErrors.length > 0) {
-      throw new HttpException(
-        HttpException.createBody(
-          ResponseDto.createBadResponse(validationErrors, this.constructor),
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw ResponseDto.createBadResponse(validationErrors, this.constructor);
     }
 
     //Comprehensive validations
@@ -220,12 +205,7 @@ export class PartnerRequestService {
     }
 
     if (validationErrors.length > 0) {
-      throw new HttpException(
-        HttpException.createBody(
-          ResponseDto.createBadResponse(validationErrors, this.constructor),
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw ResponseDto.createBadResponse(validationErrors, this.constructor);
     }
 
     const now = new Date();
@@ -270,12 +250,7 @@ export class PartnerRequestService {
     ).flatMap((e) => Object.values(e.constraints).map((m) => m));
 
     if (validationErrors.length > 0) {
-      throw new HttpException(
-        HttpException.createBody(
-          ResponseDto.createBadResponse(validationErrors, this.constructor),
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw ResponseDto.createBadResponse(validationErrors, this.constructor);
     }
 
     //Comprehensive validations
@@ -329,12 +304,7 @@ export class PartnerRequestService {
     }
 
     if (validationErrors.length > 0) {
-      throw new HttpException(
-        HttpException.createBody(
-          ResponseDto.createBadResponse(validationErrors, this.constructor),
-        ),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw ResponseDto.createBadResponse(validationErrors, this.constructor);
     }
 
     const response: PartnerRequestDto =
