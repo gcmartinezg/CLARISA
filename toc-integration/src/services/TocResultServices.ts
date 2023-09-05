@@ -360,7 +360,7 @@ export class TocResultServices{
               if (this.validatorType.existPropertyInObjectMul(target, ['value', 'date'])) {
                 let targetIndicator = new TocResultIndicatorTargetDTO();
                 targetIndicator.toc_result_indicator_id = id_indicator;
-                targetIndicator.target_value = typeof target.value == 'number' ? target.value : null;
+                targetIndicator.target_value = typeof target.value == 'string' ? target.value : null;
                 targetIndicator.target_date = typeof target.date == 'string' ? target.date : null;
                 await tocResultRepo.delete({ toc_result_indicator_id: id_indicator });
                 await tocResultRepo.save(targetIndicator);
@@ -371,7 +371,7 @@ export class TocResultServices{
                     if (this.validatorType.existPropertyInObjectMul(targetItem, ['value', 'date'])) {
                         let targetIndicator = new TocResultIndicatorTargetDTO();
                         targetIndicator.toc_result_indicator_id = id_indicator;
-                        targetIndicator.target_value = typeof targetItem.value == 'number' ? targetItem.value : null;
+                        targetIndicator.target_value = typeof targetItem.value == 'string' ? targetItem.value : null;
                         targetIndicator.target_date = typeof targetItem.date == 'string' ? targetItem.date : null;
                         await tocResultRepo.delete({ toc_result_indicator_id: id_indicator });
                         await tocResultRepo.save(targetIndicator);
