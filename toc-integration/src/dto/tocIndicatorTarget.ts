@@ -6,4 +6,6 @@ export class TocResultIndicatorTargetDTO{
     target_value:number;
     
     target_date:string;
+
+    number_target:number;
 }

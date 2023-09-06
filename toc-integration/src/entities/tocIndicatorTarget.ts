@@ -8,4 +8,6 @@ export class TocResultIndicatorTarget{
     target_value:number;
     @Column()
     target_date:string;
+    @Column()
+    number_target:number;
 }
