@@ -367,12 +367,15 @@ export class TocResultServices{
               }
 
               if(this.validatorType.validatorIsArray(target)){
+                let targetNumber = 0;
                 for(let targetItem of target){
                     if (this.validatorType.existPropertyInObjectMul(targetItem, ['value', 'date'])) {
                         let targetIndicator = new TocResultIndicatorTargetDTO();
                         targetIndicator.toc_result_indicator_id = id_indicator;
                         targetIndicator.target_value = typeof targetItem.value == 'string' ? targetItem.value : null;
                         targetIndicator.target_date = typeof targetItem.date == 'string' ? targetItem.date : null;
+                        targetIndicator.number_target = targetNumber;
+                        targetNumber= targetNumber+1;
                         await tocResultRepo.delete({ toc_result_indicator_id: id_indicator });
                         await tocResultRepo.save(targetIndicator);
                       }
