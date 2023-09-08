@@ -365,7 +365,7 @@ export class TocResultServices{
                 await tocResultRepo.delete({ toc_result_indicator_id: id_indicator });
                 await tocResultRepo.save(targetIndicator);
               }
-
+            }
               if(this.validatorType.validatorIsArray(target)){
                 let targetNumber = 0;
                 for(let targetItem of target){
@@ -381,7 +381,7 @@ export class TocResultServices{
                       }
                 }
               }
-            }
+            
           }
         } catch (error) {
           throw error;
