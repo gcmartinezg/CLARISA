@@ -88,7 +88,7 @@ export class TocServicesResults {
   }
  
   async splitInformation(idInitiativeToc:string){
-    let tocHost = await `${env.LINK_TOC}/api/toc/'+idInitiativeToc+'/dashboard-result`;
+    let tocHost = await `${env.LINK_TOC}/api/toc/${idInitiativeToc}/dashboard-result`;
 
 
     let database = new Database();
