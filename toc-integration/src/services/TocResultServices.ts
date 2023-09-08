@@ -356,7 +356,8 @@ export class TocResultServices{
           let dbConn: Connection = await this.database.getConnection();
           let tocResultRepo = await dbConn.getRepository(TocResultIndicatorTarget);
           if (id_indicator != null) {
-            if (this.validatorType.validatorIsObject(target)) {
+            let validator = await this.validatorType.validatorIsObject(target)
+            if (validator) {
               if (this.validatorType.existPropertyInObjectMul(target, ['value', 'date'])) {
                 let targetIndicator = new TocResultIndicatorTargetDTO();
                 targetIndicator.toc_result_indicator_id = id_indicator;
@@ -365,7 +366,7 @@ export class TocResultServices{
                 await tocResultRepo.delete({ toc_result_indicator_id: id_indicator });
                 await tocResultRepo.save(targetIndicator);
               }
-
+            }
               if(this.validatorType.validatorIsArray(target)){
                 let targetNumber = 0;
                 for(let targetItem of target){
@@ -381,7 +382,7 @@ export class TocResultServices{
                       }
                 }
               }
-            }
+            
           }
         } catch (error) {
           throw error;
