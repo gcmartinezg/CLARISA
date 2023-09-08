@@ -44,6 +44,7 @@ import { TocResultImpactAreaServices } from "./TocImpactAreaResults";
 import { ActionAreaTocServices } from "./TocActionAreaResults";
 import { TocResultServices } from "./TocResultServices";
 import { sendSlackNotification } from "../validators/slackNotification";
+import { env } from 'process';
 
 export class TocServicesResults {
   public validatorType = new ValidatorTypes();
@@ -87,7 +88,7 @@ export class TocServicesResults {
   }
  
   async splitInformation(idInitiativeToc:string){
-    let tocHost = await 'https://toc.loc.codeobia.com/api/toc/'+idInitiativeToc+'/dashboard-result';
+    let tocHost = await `${env.LINK_TOC}/api/toc/'+idInitiativeToc+'/dashboard-result`;
 
 
     let database = new Database();
