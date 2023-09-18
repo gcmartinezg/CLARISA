@@ -29,17 +29,17 @@ export class ValidatorTypes {
   }
 
   existPropertyInObjectMul(object: any, namesProperty: any) {
-    
+    let varRes = true;
     if (this.validatorIsArray(namesProperty)) {
       namesProperty.forEach((element) => {
         if (this.existPropertyInObject(object, element) == false) {
-          return false;
+          varRes = false;
         }
       });
     } else {
       return "Expect array";
     }
-    return true;
+    return varRes;
   }
 
   validExistNull(object: any) {
