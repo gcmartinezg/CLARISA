@@ -300,7 +300,8 @@ export class CronOST {
         !workpackagesDb.find(
           (db) =>
             db.initiative_stage_object?.initiative_id === ost.initiative_id &&
-            db.initiative_stage_object?.stage_id === ost.stage_id,
+            db.initiative_stage_object?.stage_id === ost.stage_id &&
+            db.wp_official_code === ost.wp_official_code,
         ),
     );
   }
@@ -337,7 +338,8 @@ export class CronOST {
       (oi) =>
         workpackage.initiative_stage_object?.initiative_id ===
           oi.initiative_id &&
-        workpackage.initiative_stage_object?.stage_id === oi.stage_id,
+        workpackage.initiative_stage_object?.stage_id === oi.stage_id &&
+        workpackage.wp_official_code === oi.wp_official_code,
     );
 
     if (ostWorkpackage) {
@@ -348,7 +350,6 @@ export class CronOST {
       workpackage.name = ostWorkpackage.name;
       workpackage.pathway_content = ostWorkpackage.pathway_content;
       workpackage.results = ostWorkpackage.results;
-      workpackage.wp_official_code = ostWorkpackage.wp_official_code;
     } else {
       workpackage.auditableFields.is_active = false;
     }
