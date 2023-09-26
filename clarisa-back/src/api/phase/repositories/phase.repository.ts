@@ -89,6 +89,7 @@ export class PhaseRepository {
       case PRMSApplication.IPSR:
       case PRMSApplication.TOC:
       case PRMSApplication.OST:
+      case PRMSApplication.RISK:
         phases = (await this.phaseRepositories.get(incomingMis.tableName).find({
           where: whereClause,
         })) as Phase[];

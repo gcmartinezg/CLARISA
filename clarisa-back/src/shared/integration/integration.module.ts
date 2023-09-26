@@ -18,6 +18,8 @@ import { ApiTOC } from './toc/api.toc';
 import { CronTOC } from './toc/cron.toc';
 import { CronReporting } from './reporting/cron.reporting';
 import { ApiReporting } from './reporting/api.reporting';
+import { CronRisk } from './risk/cron.risk';
+import { ApiRisk } from './risk/api.risk';
 
 @Module({
   imports: [HttpModule],
@@ -40,6 +42,8 @@ import { ApiReporting } from './reporting/api.reporting';
     PhaseRepository,
     CronReporting,
     ApiReporting,
+    CronRisk,
+    ApiRisk,
   ],
   controllers: [IntegrationController],
   exports: [QaService],

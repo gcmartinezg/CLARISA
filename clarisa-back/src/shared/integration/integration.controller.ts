@@ -11,6 +11,7 @@ import { CronOST } from './ost/cron.ost';
 import { CronTOC } from './toc/cron.toc';
 import { PRMSApplication } from '../entities/enums/prms-applications';
 import { CronReporting } from './reporting/cron.reporting';
+import { CronRisk } from './risk/cron.risk';
 
 @Controller('cronjobs')
 @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -19,6 +20,7 @@ export class IntegrationController {
     private readonly cronOst: CronOST,
     private readonly cronToc: CronTOC,
     private readonly cronReporting: CronReporting,
+    private readonly cronRisk: CronRisk,
   ) {}
 
   @Get('ost/initiatives')
@@ -41,6 +43,9 @@ export class IntegrationController {
         break;
       case PRMSApplication.TOC:
         this.cronToc.cronTocPhasesData();
+        break;
+      case PRMSApplication.RISK:
+        this.cronRisk.cronRiskPhasesData();
         break;
       default:
         throw new HttpException(`Cannot find application ${mis}`, 404);
