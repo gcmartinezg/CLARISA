@@ -20,6 +20,11 @@ export class PRMSApplication {
     'ipsr',
     'phases_ipsr',
   );
+  public static readonly RISK = new PRMSApplication(
+    'Risk Management',
+    'risk',
+    'phases_risk',
+  );
 
   private constructor(
     public readonly prettyName: string,
