@@ -22,7 +22,14 @@ export class CronReporting {
 
   // every saturday at 9 pm
   @Cron('* * 21 * * 6')
-  public async cronPhasesDataFromApplication<T extends Phase>(
+  public async cronReportingPhasesData(): Promise<void> {
+    const apps = PRMSApplication.getAllPhaseTables();
+    for (let app of apps) {
+      await this.syncPhasesDataFromApplication(app);
+    }
+  }
+
+  public async syncPhasesDataFromApplication<T extends Phase>(
     app: PRMSApplication,
   ): Promise<void> {
     const phasesRequest = await firstValueFrom(this.api.getPhases(app));

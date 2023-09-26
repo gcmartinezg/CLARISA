@@ -37,7 +37,7 @@ export class IntegrationController {
     switch (misObject) {
       case PRMSApplication.IPSR:
       case PRMSApplication.REPORTING_TOOL:
-        this.cronReporting.cronPhasesDataFromApplication(misObject);
+        this.cronReporting.syncPhasesDataFromApplication(misObject);
         break;
       case PRMSApplication.TOC:
         this.cronToc.cronTocPhasesData();
