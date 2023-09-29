@@ -18,6 +18,12 @@ export class ImpactArea {
   @Expose({ name: 'financialCode' })
   financial_code: string;
 
+  @Column({ type: 'text', nullable: true })
+  icon: string;
+
+  @Column({ type: 'text', nullable: true })
+  color: string;
+
   //object relations
 
   @OneToMany(() => ImpactAreaIndicator, (iai) => iai.impact_area_object)

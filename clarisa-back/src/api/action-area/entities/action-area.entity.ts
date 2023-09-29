@@ -19,6 +19,12 @@ export class ActionArea {
   @Column({ type: 'text', nullable: true })
   description: string;
 
+  @Column({ type: 'text', nullable: true })
+  icon: string;
+
+  @Column({ type: 'text', nullable: true })
+  color: string;
+
   //relation objects
 
   @OneToMany(
