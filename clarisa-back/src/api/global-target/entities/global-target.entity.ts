@@ -15,6 +15,9 @@ export class GlobalTarget {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  smo_code: string;
+
   @Expose({ name: 'target' })
   @Column({ type: 'text', nullable: true })
   global_target: string;

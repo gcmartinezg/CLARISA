@@ -24,6 +24,9 @@ export class Sdg {
   icon: string;
 
   @Column({ type: 'text', nullable: true })
+  color: string;
+
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   //object relations

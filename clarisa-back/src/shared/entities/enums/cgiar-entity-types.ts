@@ -17,6 +17,10 @@ export class CgiarEntityTypeOption {
     9,
     'one-cgiar-platforms',
   );
+  public static readonly ONE_CGIAR_SGP = new CgiarEntityTypeOption(
+    10,
+    'one-cgiar-sgps',
+  );
 
   private constructor(
     public readonly entity_type_id: number,
