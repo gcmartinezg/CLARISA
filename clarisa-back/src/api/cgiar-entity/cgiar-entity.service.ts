@@ -21,6 +21,7 @@ export class CgiarEntityService {
     CgiarEntityTypeOption.INITIATIVES,
     CgiarEntityTypeOption.OFFICES,
     CgiarEntityTypeOption.ONE_CGIAR_PLATFORM,
+    CgiarEntityTypeOption.ONE_CGIAR_SGP,
   ].map((cet) => cet.entity_type_id);
 
   private readonly whereClause: FindOptionsWhere<CgiarEntity> = {
