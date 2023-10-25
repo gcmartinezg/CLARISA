@@ -296,6 +296,7 @@ export class TocResultServices {
               toc_results_id: indicator.toc_results_id,
             });
 
+            let recordTocIndicator: any;
             if (existingRecord) {
               await tocResultRepo.update(
                 {
@@ -304,8 +305,16 @@ export class TocResultServices {
                 },
                 indicator
               );
+              recordTocIndicator = await tocResultRepo.findOne({
+                related_node_id: indicator.related_node_id,
+                toc_results_id: indicator.toc_results_id,
+              });
             } else {
               await tocResultRepo.insert(indicator);
+              recordTocIndicator = await tocResultRepo.findOne({
+                related_node_id: indicator.related_node_id,
+                toc_results_id: indicator.toc_results_id,
+              });
             }
 
             const auxIndicatorGeoScope = await this.saveIndicatorGeoScope(
@@ -319,7 +328,7 @@ export class TocResultServices {
 
             await this.saveIndicatorTarget(
               indicatorItem.related_node_id,
-              existingRecord.id,
+              recordTocIndicator.id,
               indicatorItem.target
             );
           }
@@ -625,6 +634,9 @@ export class TocResultServices {
         }
         if (this.validatorType.validatorIsArray(target)) {
           let targetNumber = 0;
+          await tocResultRepo.delete({
+            toc_result_indicator_id: toc_id_indicator,
+          });
           for (let targetItem of target) {
             if (
               this.validatorType.existPropertyInObjectMul(targetItem, [
@@ -641,14 +653,13 @@ export class TocResultServices {
                 typeof targetItem.date == "string" ? targetItem.date : null;
               targetIndicator.number_target = targetNumber;
               targetNumber = targetNumber + 1;
-              await tocResultRepo.delete({
-                toc_result_indicator_id: toc_id_indicator,
-              });
-              await tocResultRepo.save(targetIndicator);
+              await tocResultRepo.insert(targetIndicator);
             }
           }
         }
       }
+
+      return true;
     } catch (error) {
       throw error;
     }
