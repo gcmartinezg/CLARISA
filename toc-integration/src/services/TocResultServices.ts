@@ -208,6 +208,7 @@ export class TocResultServices {
         indicatorRegions: listRegionIndicator,
       };
     } catch (error) {
+      console.error({ error, message: "Error saving toc results" });
       throw error;
     }
   }

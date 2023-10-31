@@ -121,6 +121,7 @@ export class TocResultImpactAreaServices {
         ImpactAreaSdgResult: listSdgResults,
       };
     } catch (error) {
+      console.error({ error, message: "Error saving impact area" });
       throw error;
     }
   }
@@ -136,7 +137,7 @@ export class TocResultImpactAreaServices {
         TocImpactAreaResultsGlobalTargets
       );
       let listValidGlobalTarget = [];
-      
+
       if (this.validatorType.validatorIsArray(globalTargets)) {
         for (let global of globalTargets) {
           if (
