@@ -15,6 +15,7 @@ import { InstitutionLocation } from '../../institution/entities/institution-loca
 import { PartnerRequest } from '../../partner-request/entities/partner-request.entity';
 import { WorkpackageCountry } from '../../workpackage/entities/workpackage-country.entity';
 import { CountryRegion } from './country-region.entity';
+import { SubnationalScope } from '../../subnational-scope/entities/subnational-scope.entity';
 
 @Entity('countries')
 export class Country {
@@ -61,6 +62,9 @@ export class Country {
 
   @OneToMany(() => WorkpackageCountry, (wpc) => wpc.country_object)
   work_package_country_array: WorkpackageCountry[];
+
+  @OneToMany(() => SubnationalScope, (ss) => ss.country_object)
+  subnational_scope_array: SubnationalScope[];
 
   //auditable fields
 
