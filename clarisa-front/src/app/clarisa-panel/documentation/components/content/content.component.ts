@@ -1,4 +1,10 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { EndpointsInformationService } from '../../services/endpoints-information.service';
 
 import jsPDF from 'jspdf';
@@ -11,7 +17,7 @@ import { environment } from '../../../../../environments/environment';
   templateUrl: './content.component.html',
   styleUrls: ['./content.component.scss'],
 })
-export class ContentComponent implements OnInit {
+export class ContentComponent implements OnInit, OnChanges {
   @Input() information: any;
   @Input() urlParams: any;
   arrayColumns = [];
@@ -29,11 +35,7 @@ export class ContentComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    if (environment.production) {
-      this.urlClarisa = environment.apiUrl;
-    } else {
-      this.urlClarisa = environment.apiUrl;
-    }
+    this.urlClarisa = environment.apiUrl;
   }
 
   ngOnChanges(paramsUrl: SimpleChanges) {
@@ -83,7 +85,7 @@ export class ContentComponent implements OnInit {
   }
 
   iniciativeEndInformation() {
-    var auxVariable = JSON.parse(this.informationPrint.response_json);
+    let auxVariable = JSON.parse(this.informationPrint.response_json);
     this.arrayColumns = this.columnsTable(auxVariable.properties);
     this.findColumns = [];
     for (let i of this.arrayColumns) {
@@ -94,7 +96,7 @@ export class ContentComponent implements OnInit {
   }
 
   returnResponseJson() {
-    var auxVariable = JSON.parse(this.informationPrint.response_json);
+    let auxVariable = JSON.parse(this.informationPrint.response_json);
     this.responseJsonPrint = this.jsonResponse(
       auxVariable.properties,
       auxVariable.object_type
@@ -159,8 +161,8 @@ export class ContentComponent implements OnInit {
   }
 
   columnsTable(listaAux) {
-    var endpointJsonOnes = listaAux;
-    var columns = [];
+    let endpointJsonOnes = listaAux;
+    let columns = [];
     for (let i in endpointJsonOnes) {
       if (
         endpointJsonOnes[i].show_in_table == true &&
@@ -201,7 +203,7 @@ export class ContentComponent implements OnInit {
     let d = new Date();
     let columns = [];
     let information = [];
-    this.arrayColumns.map((x) => {
+    this.arrayColumns.forEach((x) => {
       columns.push(x[0]);
     });
     for (let k of this.exportInformation()) {
@@ -265,9 +267,9 @@ export class ContentComponent implements OnInit {
   exportInformation() {
     let exportInformation = [];
     let objectFormat = {};
-    var infoListUnque = '';
-    var infoListObject = '';
-    var infoObject = '';
+    let infoListUnque = '';
+    let infoListObject = '';
+    let infoObject = '';
     for (let i of this.informationEndpoint) {
       objectFormat = {};
       infoListUnque = '';

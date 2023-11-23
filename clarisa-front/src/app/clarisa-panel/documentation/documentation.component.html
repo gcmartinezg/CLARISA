@@ -1,14 +1,13 @@
+<div *ngIf="!isLoaded" class="loader">
+  <img src="../../assets/images/loadeer.gif" style="width: 50px; height: 50px" alt="Loading..." />
+</div>
+
 <div class="page" style="background-color: white">
   <div class="page-main">
     <app-horizontal-menu></app-horizontal-menu>
-    <app-vertical-menu
-      [urlParams]="_servicesUrl.getParams()"
-      [subCategories]="endpointsFilterInformation"
-    ></app-vertical-menu>
-    <app-content
-      [information]="endpointsFilterInformation"
-      [urlParams]="_servicesUrl.getParams()"
-    ></app-content>
+    <app-vertical-menu [urlParams]="_servicesUrl.getParams()" [subCategories]="endpointsFilterInformation"
+      *ngIf="isLoaded"></app-vertical-menu>
+    <app-content [information]="endpointsFilterInformation" [urlParams]="_servicesUrl.getParams()"
+      *ngIf="isLoaded"></app-content>
   </div>
 </div>
-

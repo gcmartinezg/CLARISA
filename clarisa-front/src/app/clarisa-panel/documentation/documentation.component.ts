@@ -16,9 +16,11 @@ export class DocumentationComponent implements OnInit {
   informationEndpoint: any;
   contador: any;
   cont: any;
+  isLoaded: boolean = false;
+
   constructor(
     private routeActive: ActivatedRoute,
-    private _manageApiService: EndpointsInformationService,
+    public _manageApiService: EndpointsInformationService,
     public _servicesUrl: UrlParamsService
   ) {}
 
@@ -26,14 +28,18 @@ export class DocumentationComponent implements OnInit {
     this.routeActive.params.subscribe((resp) => {
       this._servicesUrl.updateParams(resp);
     });
-    this.endPointsInformation = endpointsInfo;
-    this.endPointsInformation.find((x: any) => {
-      if (
-        x.name ==
-        this._servicesUrl.getParams().nameCategory.split('_').join(' ')
-      ) {
-        this.endpointsFilterInformation = x;
-      }
+
+    this._manageApiService.getAllEndpoints().subscribe((resp: any) => {
+      this.endPointsInformation = resp;
+      this.endPointsInformation.find((x: any) => {
+        if (
+          x.name ==
+          this._servicesUrl.getParams().nameCategory.split('_').join(' ')
+        ) {
+          this.endpointsFilterInformation = x;
+        }
+      });
+      this.isLoaded = true;
     });
   }
 }
