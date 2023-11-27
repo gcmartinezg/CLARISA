@@ -67,6 +67,7 @@ import { SourceModule } from './source/source.module';
 import { PermissionModule } from './permission/permission.module';
 import { PhaseModule } from './phase/phase.module';
 import { SubnationalScopeModule } from './subnational-scope/subnational-scope.module';
+import { LanguageModule } from './language/language.module';
 
 @Module({
   controllers: [ApiController],
@@ -138,6 +139,7 @@ import { SubnationalScopeModule } from './subnational-scope/subnational-scope.mo
     PermissionModule,
     PhaseModule,
     SubnationalScopeModule,
+    LanguageModule,
   ],
 })
 export class ApiModule {}

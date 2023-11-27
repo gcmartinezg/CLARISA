@@ -63,6 +63,7 @@ import { SourceModule } from './source/source.module';
 import { PermissionModule } from './permission/permission.module';
 import { PhaseModule } from './phase/phase.module';
 import { SubnationalScopeModule } from './subnational-scope/subnational-scope.module';
+import { LanguageModule } from './language/language.module';
 
 export const apiRoutes = [
   {
@@ -324,5 +325,9 @@ export const apiRoutes = [
   {
     path: 'subnational-scope',
     module: SubnationalScopeModule,
+  },
+  {
+    path: 'languages',
+    module: LanguageModule,
   },
 ];

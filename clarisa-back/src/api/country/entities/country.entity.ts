@@ -16,6 +16,9 @@ import { PartnerRequest } from '../../partner-request/entities/partner-request.e
 import { WorkpackageCountry } from '../../workpackage/entities/workpackage-country.entity';
 import { CountryRegion } from './country-region.entity';
 import { SubnationalScope } from '../../subnational-scope/entities/subnational-scope.entity';
+import { CountryLanguage } from './country-language.entity';
+import { CountryName } from './country-name.entity';
+import { SubnationalCategory } from '../../subnational-scope/entities/subnational-category.entity';
 
 @Entity('countries')
 export class Country {
@@ -65,6 +68,15 @@ export class Country {
 
   @OneToMany(() => SubnationalScope, (ss) => ss.country_object)
   subnational_scope_array: SubnationalScope[];
+
+  @OneToMany(() => CountryLanguage, (cl) => cl.country_object)
+  country_language_array: CountryLanguage[];
+
+  @OneToMany(() => CountryName, (cn) => cn.country_object)
+  country_name_array: CountryName[];
+
+  @OneToMany(() => SubnationalCategory, (sc) => sc.country_object)
+  subnational_category_array: SubnationalCategory[];
 
   //auditable fields
 
