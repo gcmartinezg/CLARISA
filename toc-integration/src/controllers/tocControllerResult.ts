@@ -30,6 +30,16 @@ export class tocController {
     }
   }
 
+  async getHelloWorld(req: Request, res: Response) {
+    try {
+      res.status(200).json({ message: "Welcome to the ToC Integration 🍦" });
+    } catch (error) {
+      res.status(500).json({
+        error: "An error occurred at the time of making the request.",
+      });
+    }
+  }
+
   async getTest(req: Request, res: Response) {
     try {
       let servicesInformation = new TocServicesResults();
