@@ -1,12 +1,19 @@
 import { BaseAuthenticator } from './interface/BaseAuthenticator';
 import ActiveDirectory from 'activedirectory';
-import config from 'src/shared/config/config';
+import { env } from 'process';
+import 'dotenv/config';
 import { BaseMessageDTO } from './BaseMessageDTO';
 import { Injectable, HttpStatus } from '@nestjs/common';
+import { ADInterface } from './interface/ADInterface';
 
 @Injectable()
 export class LDAPAuth implements BaseAuthenticator {
-  private ad = new ActiveDirectory(config.active_directory);
+  private adOptions: ADInterface = {
+    baseDN: env.AD_BASEDN,
+    domain: env.AD_DOMAIN,
+    url: env.AD_URL,
+  }
+  private ad = new ActiveDirectory(this.adOptions);
 
   authenticate(
     username: string,
