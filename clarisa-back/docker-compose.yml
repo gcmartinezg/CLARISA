@@ -1,0 +1,65 @@
+version: '3.1'
+
+services:
+  db:
+    image: mysql:8.3.0-oraclelinux8
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+    container_name: ${DB_NAME}
+    volumes:
+      - clarisa-db:/var/lib/mysql
+    #add db backup restoration inside db container
+
+  back-end:
+    build:
+      context: .
+      target: ${APP_PROFILE}
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app/
+      - /app/node_modules
+    container_name: clarisa-app-back
+    depends_on:
+      - db
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    environment:
+      - APP_PORT=${APP_PORT}
+      - APP_PROFILE=${APP_PROFILE}
+      - DB_HOST=${DB_NAME}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+      - AD_URL=${AD_URL}
+      - AD_BASEDN=${AD_BASEDN}
+      - AD_DOMAIN=${AD_DOMAIN}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_TIME=${JWT_TIME}
+      - BCRYPT_SALT_ROUNDS=${BCRYPT_SALT_ROUNDS}
+      - SUPPORT_EMAIL=${SUPPORT_EMAIL}
+      - PREFERRED_EMAIL_HOST=${PREFERRED_EMAIL_HOST}
+      - PREFERRED_EMAIL_PORT=${PREFERRED_EMAIL_PORT}
+      - PREFERRED_EMAIL_USERNAME=${PREFERRED_EMAIL_USERNAME}
+      - PREFERRED_EMAIL_PASSWORD=${PREFERRED_EMAIL_PASSWORD}
+      - ALTERNATIVE_EMAIL_HOST=${ALTERNATIVE_EMAIL_HOST}
+      - ALTERNATIVE_EMAIL_PORT=${ALTERNATIVE_EMAIL_PORT}
+      - ALTERNATIVE_EMAIL_USERNAME=${ALTERNATIVE_EMAIL_USERNAME}
+      - ALTERNATIVE_EMAIL_PASSWORD=${ALTERNATIVE_EMAIL_PASSWORD}
+      - OST_URL=${OST_URL}
+      - OST_USER=${OST_USER}
+      - OST_PASS=${OST_PASS}
+      - QA_URL=${QA_URL}
+      - TOC_URL=${TOC_URL}
+      - REPORTING_URL=${REPORTING_URL}
+
+volumes:
+  clarisa-db:
+    external: false
