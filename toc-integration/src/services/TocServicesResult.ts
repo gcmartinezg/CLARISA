@@ -156,6 +156,11 @@ export class TocServicesResults {
       }
 
       await this.saveInDataBase();
+      sendSlackNotification(
+        ":check1:",
+        officialCode,
+        "Synchronization with ToC was successful"
+      );
       return this.InformationSaving;
     } catch (error) {
       sendSlackNotification(
