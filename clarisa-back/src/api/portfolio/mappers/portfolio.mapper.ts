@@ -10,7 +10,7 @@ export class PortfolioMapper {
   ): PortfolioDto {
     const portfolioDto: PortfolioDto = new PortfolioDto();
 
-    portfolioDto.id = portfolio.id;
+    portfolioDto.code = portfolio.id;
     portfolioDto.name = portfolio.name;
     portfolioDto.start_date = portfolio.start_date?.getFullYear();
     portfolioDto.end_date = portfolio.end_date?.getFullYear();

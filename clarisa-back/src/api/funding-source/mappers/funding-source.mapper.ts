@@ -10,7 +10,7 @@ export class FundingSourceMapper {
   ): FundingSourceDto {
     const fundingSourceDto: FundingSourceDto = new FundingSourceDto();
 
-    fundingSourceDto.id = fundingSource.id;
+    fundingSourceDto.code = fundingSource.id;
     fundingSourceDto.name = fundingSource.name;
     fundingSourceDto.description = fundingSource.description;
     fundingSourceDto.type_term = fundingSource.type_term;
