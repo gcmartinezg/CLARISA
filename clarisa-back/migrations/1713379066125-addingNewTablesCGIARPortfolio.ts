@@ -46,6 +46,9 @@ export class AddingNewTablesCGIARPortfolio1713379066125
       `ALTER TABLE \`global_units\` ADD \`portfolio_id\` bigint NULL`,
     );
     await queryRunner.query(
+      `ALTER TABLE \`global_units\` CHANGE \`acronym\` \`acronym\` text NULL`,
+    );
+    await queryRunner.query(
       `ALTER TABLE \`global_unit_types\` CHANGE \`name\` \`name\` text NOT NULL`,
     );
     await queryRunner.query(
@@ -77,6 +80,9 @@ export class AddingNewTablesCGIARPortfolio1713379066125
     );
     await queryRunner.query(
       `ALTER TABLE \`global_unit_types\` CHANGE \`name\` \`name\` text CHARACTER SET "utf8mb4" COLLATE "utf8mb4_0900_ai_ci" NULL`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`global_units\` CHANGE \`acronym\` \`acronym\` text CHARACTER SET "utf8mb4" COLLATE "utf8mb4_0900_ai_ci" NOT NULL`,
     );
     await queryRunner.query(
       `ALTER TABLE \`global_units\` DROP COLUMN \`portfolio_id\``,

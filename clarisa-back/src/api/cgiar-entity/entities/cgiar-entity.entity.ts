@@ -23,7 +23,7 @@ export class CgiarEntity {
   @Column({ type: 'text', nullable: true })
   short_name: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text', nullable: true })
   acronym: string;
 
   @Column({ type: 'text', nullable: true })
