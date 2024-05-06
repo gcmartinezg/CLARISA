@@ -16,5 +16,5 @@ export class VariablesService {
 interface Process {
   name: string;
   step: number;
-  works: boolean | null;
+  works: boolean | null | number;
 }
