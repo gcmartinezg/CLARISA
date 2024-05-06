@@ -79,7 +79,7 @@
   margin-top: 0.5rem;
 }
 
-.hideReport{
+.hideReport {
   opacity: 0;
 }
 
@@ -95,7 +95,6 @@
   box-shadow: 0px 0px 10px 0px #00000063;
   border-radius: 5px;
   padding-right: 70px;
-
 
   .help {
     position: absolute;
@@ -130,7 +129,6 @@
     .help_icon {
       cursor: pointer;
       color: rgb(74, 116, 255);
-
     }
   }
 
@@ -157,14 +155,14 @@
     }
 
     .text {
-      font-size: .9rem;
+      font-size: 0.9rem;
     }
   }
 }
 
 @keyframes pulse {
   0% {
-    transform: scale(.8);
+    transform: scale(0.8);
   }
 
   50% {
@@ -172,12 +170,11 @@
   }
 
   100% {
-    transform: scale(.8);
+    transform: scale(0.8);
   }
 }
 
-
-.report_loader{
+.report_loader {
   position: fixed;
   top: 0;
   left: 0;
@@ -189,7 +186,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  .content{
+  .content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -201,12 +198,12 @@
     max-width: 491px;
     width: 100%;
     margin: 1rem;
-    i{
+    i {
       color: #f1c911;
       font-size: 3rem;
       animation: spin 1.5s linear infinite;
     }
-    .text{
+    .text {
       font-size: 1.5rem;
       font-weight: 500;
       color: #525252;
@@ -214,10 +211,16 @@
   }
 }
 
-
-
 @keyframes spin {
-  0% { transform: rotate(0deg); color: #f1c911; }
-  50% { color: #fde681; }
-  100% { transform: rotate(-360deg); color: #f1c911; }
+  0% {
+    transform: rotate(0deg);
+    color: #f1c911;
+  }
+  50% {
+    color: #fde681;
+  }
+  100% {
+    transform: rotate(-360deg);
+    color: #f1c911;
+  }
 }

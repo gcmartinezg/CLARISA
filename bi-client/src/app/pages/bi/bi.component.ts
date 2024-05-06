@@ -5,15 +5,19 @@ import { Title } from '@angular/platform-browser';
 import { IBDGoogleAnalytics } from 'ibdevkit';
 import { environment } from '../../../environments/environment';
 import { firstValueFrom } from 'rxjs';
-import { TabVisibilityService } from 'src/app/services/tab-visibility.service';
 import { VariablesService } from '../../services/variables.service';
+import { CommonModule } from '@angular/common';
+import { TabVisibilityService } from '../../services/tab-visibility.service';
+import { LoaderComponent } from '../../components/loader/loader.component';
 
 @Component({
   selector: 'app-bi',
+  standalone: true,
+  imports: [CommonModule, LoaderComponent],
   templateUrl: './bi.component.html',
-  styleUrls: ['./bi.component.scss']
+  styleUrl: './bi.component.scss'
 })
-export class BiComponent implements OnInit {
+export default class BiComponent implements OnInit {
   reportName = '';
   sectionNumber = '';
   reportDescription = '';

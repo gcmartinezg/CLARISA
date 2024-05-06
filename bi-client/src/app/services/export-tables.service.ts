@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as FileSaver from 'file-saver';
-import * as csv from 'csvtojson';
+import csv from 'csvtojson';
 interface Wscols {
   wpx: number;
 }
