@@ -113,7 +113,7 @@ export class BiImplementationService {
       console.log(filter);
       console.log(this.convertVariableToList(variables, filter?.param_type));
       const filterConfig = {
-        $schema: 'http://powerbi.com/product/schema#basic',
+        $schema: 'https://powerbi.com/product/schema#basic',
         target: {
           table: filter?.table,
           column: filter?.column
