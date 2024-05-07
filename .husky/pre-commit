@@ -1,1 +1,2 @@
 cd bi-client
+npm run lint

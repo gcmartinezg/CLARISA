@@ -9,6 +9,7 @@ import { VariablesService } from '../../services/variables.service';
 import { CommonModule } from '@angular/common';
 import { TabVisibilityService } from '../../services/tab-visibility.service';
 import { LoaderComponent } from '../../components/loader/loader.component';
+import { GetBiReport } from '../../shared/api.interface';
 
 @Component({
   selector: 'app-bi',
@@ -152,7 +153,7 @@ export default class BiComponent implements OnInit {
     if (!this.reportName) return;
 
     try {
-      const reportData = await firstValueFrom(
+      const reportData: GetBiReport = await firstValueFrom(
         this.biImplementationSE.getBiReportWithCredentialsByreportName({
           report_name: this.reportName,
           subpage_id: this.sectionNumber
@@ -160,7 +161,7 @@ export default class BiComponent implements OnInit {
       );
 
       const { report } = reportData;
-      this.showFullScreen = report?.hasFullScreen;
+      this.showFullScreen = Boolean(report.has_full_screen);
       this.validateBAckResponseProcess(reportData);
 
       this.reportDescription = report?.report_description;
@@ -172,7 +173,7 @@ export default class BiComponent implements OnInit {
         report?.mainPage == 'Record not found' ? '' : report?.mainPage
       );
       const reportPageName = await this.biImplementationSE.getReportName();
-      this.biImplementationSE.currentReportName = report?.name;
+      this.biImplementationSE.currentReportName = report?.report_name;
       this.gATracking(reportPageName);
     } catch (error) {
       console.error(error);
