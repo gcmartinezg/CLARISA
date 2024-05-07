@@ -6,6 +6,7 @@
   },
   "scripts": {
     "ng": "ng",
+    "s-lint": "stylelint '**/*.scss'",
     "start": "ng serve",
     "build": "ng build",
     "build-dev": "ng build --configuration development",
@@ -43,6 +44,8 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "stylelint": "^16.5.0",
+    "stylelint-config-standard-scss": "^13.1.0",
     "typescript": "~5.4.2"
   }
 }
