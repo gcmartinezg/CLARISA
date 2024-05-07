@@ -9,4 +9,7 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'bi-client';
+  sum(a: number, b: number) {
+    return a + b;
+  }
 }
