@@ -66,6 +66,9 @@ import { SubnationalScopeModule } from './subnational-scope/subnational-scope.mo
 import { LanguageModule } from './language/language.module';
 import { FirstOrderAdministrativeDivisionModule } from './first-order-administrative-division/first-order-administrative-division.module';
 import { SecondOrderAdministrativeDivisionModule } from './second-order-administrative-division/second-order-administrative-division.module';
+import { PortfolioModule } from './portfolio/portfolio.module';
+import { FundingSourceModule } from './funding-source/funding-source.module';
+import { CenterModule } from './center/center.module';
 
 export const apiRoutes = [
   {
@@ -185,7 +188,7 @@ export const apiRoutes = [
     module: CgiarEntityModule,
   },
   {
-    path: 'cgiar-entity-types',
+    path: 'cgiar-entity-typology',
     module: CgiarEntityTypeModule,
   },
   {
@@ -339,5 +342,17 @@ export const apiRoutes = [
   {
     path: 'languages',
     module: LanguageModule,
+  },
+  {
+    path: 'portfolios',
+    module: PortfolioModule,
+  },
+  {
+    path: 'funding-sources',
+    module: FundingSourceModule,
+  },
+  {
+    path: 'centers',
+    module: CenterModule,
   },
 ];
