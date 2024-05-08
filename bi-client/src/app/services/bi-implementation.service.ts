@@ -149,11 +149,11 @@ export class BiImplementationService {
           if (activePage) {
             resolve(activePage.displayName);
           } else {
-            reject('No se pudo obtener el nombre de la página activa.');
+            reject(new Error('No se pudo obtener el nombre de la página activa.'));
           }
         })
         .catch(error => {
-          reject(error);
+          reject(new Error(error));
         });
     });
   }

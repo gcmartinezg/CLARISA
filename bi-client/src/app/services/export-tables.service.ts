@@ -55,8 +55,7 @@ export class ExportTablesService {
             resolve();
           });
         } catch (error) {
-          console.error(error);
-          reject(error);
+          reject(new Error(error as string));
         }
       });
     });
