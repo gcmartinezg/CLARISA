@@ -97,7 +97,7 @@ export class BiImplementationService {
         console.log('Error');
         console.error(err);
         this.variablesSE.processes[3].works = false;
-        reject(err);
+        reject(new Error(err.detail.e)); // Pass the error message as the argument
       });
       this.exportButton(this.report);
     });

@@ -69,10 +69,13 @@ export default class BiComponent implements OnInit {
   }
 
   getFullscreenElement(): Element | null | undefined {
-    return document.fullscreenElement ||
-      (document as Document & {mozFullScreenElement?: Element | undefined}).mozFullScreenElement ||
-      (document as Document & {msFullscreenElement?: Element | undefined}).msFullscreenElement ||
-      (document as Document & {webkitFullscreenElement?: Element | undefined}).webkitFullscreenElement;
+    return (
+      document.fullscreenElement ||
+      (document as Document & { mozFullScreenElement: Element | undefined }).mozFullScreenElement ||
+      (document as Document & { msFullscreenElement: Element | undefined }).msFullscreenElement ||
+      (document as Document & { webkitFullscreenElement: Element | undefined })
+        .webkitFullscreenElement
+    );
   }
 
   enterFullScreen() {
@@ -86,9 +89,15 @@ export default class BiComponent implements OnInit {
   }
 
   requestFullScreenVendorSpecific(element: HTMLElement) {
-    const mozRequestFullScreen = (element as HTMLElement & {mozRequestFullScreen?: () => Promise<void>}).mozRequestFullScreen;
-    const webkitRequestFullscreen = (element as HTMLElement & {webkitRequestFullscreen?: () => Promise<void>}).webkitRequestFullscreen;
-    const msRequestFullscreen = (element as HTMLElement & {msRequestFullscreen?: () => Promise<void>}).msRequestFullscreen;
+    const mozRequestFullScreen = (
+      element as HTMLElement & { mozRequestFullScreen?: () => Promise<void> }
+    ).mozRequestFullScreen;
+    const webkitRequestFullscreen = (
+      element as HTMLElement & { webkitRequestFullscreen?: () => Promise<void> }
+    ).webkitRequestFullscreen;
+    const msRequestFullscreen = (
+      element as HTMLElement & { msRequestFullscreen?: () => Promise<void> }
+    ).msRequestFullscreen;
 
     if (mozRequestFullScreen) {
       mozRequestFullScreen();
@@ -109,9 +118,14 @@ export default class BiComponent implements OnInit {
   }
 
   exitFullScreenVendorSpecific() {
-    const mozCancelFullScreen = (document as Document & {mozCancelFullScreen?: () => Promise<void>}).mozCancelFullScreen;
-    const webkitExitFullscreen = (document as Document & {webkitExitFullscreen?: () => Promise<void>}).webkitExitFullscreen;
-    const msExitFullscreen = (document as Document & {msExitFullscreen?: () => Promise<void>}).msExitFullscreen;
+    const mozCancelFullScreen = (
+      document as Document & { mozCancelFullScreen?: () => Promise<void> }
+    ).mozCancelFullScreen;
+    const webkitExitFullscreen = (
+      document as Document & { webkitExitFullscreen?: () => Promise<void> }
+    ).webkitExitFullscreen;
+    const msExitFullscreen = (document as Document & { msExitFullscreen?: () => Promise<void> })
+      .msExitFullscreen;
 
     if (mozCancelFullScreen) {
       mozCancelFullScreen();
@@ -132,7 +146,7 @@ export default class BiComponent implements OnInit {
     return `calc(100vh - 65px - ${reportDescriptionHtml?.clientHeight ?? 0}px)`;
   }
 
-  validateBAckResponseProcess(reportData: {token: string, azureValidation: number}) {
+  validateBAckResponseProcess(reportData: { token: string; azureValidation: number }) {
     const { token, azureValidation } = reportData;
     if (token) this.variablesSE.processes[1].works = true;
     this.variablesSE.processes[2].works = true;
@@ -190,5 +204,5 @@ export default class BiComponent implements OnInit {
   reportDescriptionInnerHtml() {
     const element: HTMLElement | null = document.getElementById('reportDescription');
     if (element) element.innerHTML = this.reportDescription;
-}
+  }
 }

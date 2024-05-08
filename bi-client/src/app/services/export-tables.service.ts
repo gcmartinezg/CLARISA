@@ -34,8 +34,9 @@ export class ExportTablesService {
     return new Promise((resolve, reject) => {
       this.localCsvToJson(csvText).then(list => {
         console.log(list);
-        try {
-          import('xlsx').then(xlsx => {
+
+        import('xlsx').then(
+          xlsx => {
             const worksheet = xlsx.utils.json_to_sheet(list as Wscols[], {
               skipHeader: Boolean(wscols?.length)
             });
@@ -53,10 +54,11 @@ export class ExportTablesService {
 
             this.saveAsExcelFile(excelBuffer, fileName);
             resolve();
-          });
-        } catch (error) {
-          reject(new Error(error as string));
-        }
+          },
+          err => {
+            reject(new Error(err));
+          }
+        );
       });
     });
   }
