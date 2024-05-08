@@ -59,14 +59,14 @@
   </div>
 
   <div
-    class="process {{ process?.works != null  && 'step-' + process?.step }}"
+    class="process {{ process?.works !== null  && 'step-' + process?.step }}"
     [attr.works]="process?.works"
     *ngFor="let process of this.variablesSE.processes">
     <i
       *ngIf="process.works !== null; else loggedOut"
       class="material-icons-round"
-      [ngClass]="{ bad: !process.works, optional: process.works == 2 }">
-      {{ process.works == 2 ? 'fiber_manual_record' : process.works ? 'check_circle' : 'cancel' }}
+      [ngClass]="{ bad: !process.works, optional: process.works === 2 }">
+      {{ process.works === 2 ? 'fiber_manual_record' : process.works ? 'check_circle' : 'cancel' }}
     </i>
     <ng-template #loggedOut>
       <i class="loader material-icons-round"> adjust </i>

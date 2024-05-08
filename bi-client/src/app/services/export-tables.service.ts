@@ -1,56 +1,55 @@
 import { Injectable } from '@angular/core';
 import * as FileSaver from 'file-saver';
-import * as csv from 'csvtojson';
-interface Wscols {
-  wpx: number;
-}
+import csv from 'csvtojson';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ExportTablesService {
   async localCsvToJson(csvText: string) {
-    return new Promise((resolve, reject) => {
-      console.clear();
-      let list: any[] = [];
-      let array: any;
+    return new Promise(resolve => {
+      const list: Wscols[] = [];
+      let array: string[][] = [];
       csv({
         noheader: true,
         output: 'csv'
       })
         .fromString(csvText)
-        .then((data: any) => {
+        .then((data: string[][]) => {
           array = data;
-          array.forEach((row: any, i: any) => {
+          array.forEach((row: string[], i: number) => {
             if (i == 0) return;
-            let obj: any = {};
-            row.forEach((col: any, j: any) => {
+            const obj: Wscols = {} as Wscols;
+            row.forEach((col: string, j: number) => {
               obj[array[0][j]] = array[i][j];
             });
             list.push(obj);
           });
-
           resolve(list);
         });
     });
   }
 
-  async exportExcel(csvText: any, fileName: string, wscols?: Wscols[]): Promise<void> {
+  async exportExcel(csvText: string, fileName: string, wscols?: Wscols[]): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.localCsvToJson(csvText).then((list: any) => {
+      this.localCsvToJson(csvText).then(list => {
+        console.log(list);
         try {
           import('xlsx').then(xlsx => {
-            const worksheet = xlsx.utils.json_to_sheet(list, {
+            const worksheet = xlsx.utils.json_to_sheet(list as Wscols[], {
               skipHeader: Boolean(wscols?.length)
             });
-            if (wscols) worksheet['!cols'] = wscols as any;
+            if (wscols) worksheet['!cols'] = wscols;
             const workbook = {
               Sheets: { data: worksheet },
               SheetNames: ['data']
             };
-            const excelBuffer: any = xlsx.write(workbook, {
+            const excelBuffer: ArrayBuffer = xlsx.write(workbook, {
               bookType: 'xlsx',
               type: 'array'
             });
+
+            console.log(excelBuffer);
 
             this.saveAsExcelFile(excelBuffer, fileName);
             resolve();
@@ -63,11 +62,11 @@ export class ExportTablesService {
     });
   }
 
-  private saveAsExcelFile(buffer: any, fileName: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      let EXCEL_TYPE =
+  private saveAsExcelFile(buffer: ArrayBuffer, fileName: string): Promise<void> {
+    return new Promise(resolve => {
+      const EXCEL_TYPE =
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-      let EXCEL_EXTENSION = '.xlsx';
+      const EXCEL_EXTENSION = '.xlsx';
       const data: Blob = new Blob([buffer], {
         type: EXCEL_TYPE
       });
@@ -75,4 +74,9 @@ export class ExportTablesService {
       resolve();
     });
   }
+}
+
+interface Wscols {
+  [key: string]: string;
+  // Aquí van las otras propiedades de Wscols
 }

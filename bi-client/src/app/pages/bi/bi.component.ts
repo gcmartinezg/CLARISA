@@ -5,15 +5,20 @@ import { Title } from '@angular/platform-browser';
 import { IBDGoogleAnalytics } from 'ibdevkit';
 import { environment } from '../../../environments/environment';
 import { firstValueFrom } from 'rxjs';
-import { TabVisibilityService } from 'src/app/services/tab-visibility.service';
 import { VariablesService } from '../../services/variables.service';
+import { CommonModule } from '@angular/common';
+import { TabVisibilityService } from '../../services/tab-visibility.service';
+import { LoaderComponent } from '../../components/loader/loader.component';
+import { GetBiReport } from '../../shared/api.interface';
 
 @Component({
   selector: 'app-bi',
+  standalone: true,
+  imports: [CommonModule, LoaderComponent],
   templateUrl: './bi.component.html',
-  styleUrls: ['./bi.component.scss']
+  styleUrl: './bi.component.scss'
 })
-export class BiComponent implements OnInit {
+export default class BiComponent implements OnInit {
   reportName = '';
   sectionNumber = '';
   reportDescription = '';
@@ -54,36 +59,66 @@ export class BiComponent implements OnInit {
   }
 
   toggleFullScreen() {
-    const fullscreenElement =
-      document.fullscreenElement ||
-      (document as any).mozFullScreenElement ||
-      (document as any).msFullscreenElement ||
-      (document as any).webkitFullscreenElement;
+    const fullscreenElement = this.getFullscreenElement();
 
     if (!fullscreenElement) {
-      const element = document.documentElement;
-      if (element.requestFullscreen) {
-        element.requestFullscreen();
-      } else if ((element as any).mozRequestFullScreen) {
-        (element as any).mozRequestFullScreen();
-      } else if ((element as any).webkitRequestFullscreen) {
-        (element as any).webkitRequestFullscreen();
-      } else if ((element as any).msRequestFullscreen) {
-        (element as any).msRequestFullscreen();
-      }
-      this.isFullScreen = true;
+      this.enterFullScreen();
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if ((document as any).mozCancelFullScreen) {
-        (document as any).mozCancelFullScreen();
-      } else if ((document as any).webkitExitFullscreen) {
-        (document as any).webkitExitFullscreen();
-      } else if ((document as any).msExitFullscreen) {
-        (document as any).msExitFullscreen();
-      }
+      this.exitFullScreen();
+    }
+  }
 
-      this.isFullScreen = false;
+  getFullscreenElement(): Element | null | undefined {
+    return document.fullscreenElement ||
+      (document as Document & {mozFullScreenElement?: Element | undefined}).mozFullScreenElement ||
+      (document as Document & {msFullscreenElement?: Element | undefined}).msFullscreenElement ||
+      (document as Document & {webkitFullscreenElement?: Element | undefined}).webkitFullscreenElement;
+  }
+
+  enterFullScreen() {
+    const element = document.documentElement;
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else {
+      this.requestFullScreenVendorSpecific(element);
+    }
+    this.isFullScreen = true;
+  }
+
+  requestFullScreenVendorSpecific(element: HTMLElement) {
+    const mozRequestFullScreen = (element as HTMLElement & {mozRequestFullScreen?: () => Promise<void>}).mozRequestFullScreen;
+    const webkitRequestFullscreen = (element as HTMLElement & {webkitRequestFullscreen?: () => Promise<void>}).webkitRequestFullscreen;
+    const msRequestFullscreen = (element as HTMLElement & {msRequestFullscreen?: () => Promise<void>}).msRequestFullscreen;
+
+    if (mozRequestFullScreen) {
+      mozRequestFullScreen();
+    } else if (webkitRequestFullscreen) {
+      (webkitRequestFullscreen as () => Promise<void>)();
+    } else if (msRequestFullscreen) {
+      msRequestFullscreen();
+    }
+  }
+
+  exitFullScreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else {
+      this.exitFullScreenVendorSpecific();
+    }
+    this.isFullScreen = false;
+  }
+
+  exitFullScreenVendorSpecific() {
+    const mozCancelFullScreen = (document as Document & {mozCancelFullScreen?: () => Promise<void>}).mozCancelFullScreen;
+    const webkitExitFullscreen = (document as Document & {webkitExitFullscreen?: () => Promise<void>}).webkitExitFullscreen;
+    const msExitFullscreen = (document as Document & {msExitFullscreen?: () => Promise<void>}).msExitFullscreen;
+
+    if (mozCancelFullScreen) {
+      mozCancelFullScreen();
+    } else if (webkitExitFullscreen) {
+      (webkitExitFullscreen as () => Promise<void>)();
+    } else if (msExitFullscreen) {
+      msExitFullscreen();
     }
   }
 
@@ -97,7 +132,7 @@ export class BiComponent implements OnInit {
     return `calc(100vh - 65px - ${reportDescriptionHtml?.clientHeight ?? 0}px)`;
   }
 
-  validateBAckResponseProcess(reportData: any) {
+  validateBAckResponseProcess(reportData: {token: string, azureValidation: number}) {
     const { token, azureValidation } = reportData;
     if (token) this.variablesSE.processes[1].works = true;
     this.variablesSE.processes[2].works = true;
@@ -118,7 +153,7 @@ export class BiComponent implements OnInit {
     if (!this.reportName) return;
 
     try {
-      const reportData = await firstValueFrom(
+      const reportData: GetBiReport = await firstValueFrom(
         this.biImplementationSE.getBiReportWithCredentialsByreportName({
           report_name: this.reportName,
           subpage_id: this.sectionNumber
@@ -126,7 +161,7 @@ export class BiComponent implements OnInit {
       );
 
       const { report } = reportData;
-      this.showFullScreen = report?.hasFullScreen;
+      this.showFullScreen = Boolean(report.has_full_screen);
       this.validateBAckResponseProcess(reportData);
 
       this.reportDescription = report?.report_description;
@@ -138,7 +173,7 @@ export class BiComponent implements OnInit {
         report?.mainPage == 'Record not found' ? '' : report?.mainPage
       );
       const reportPageName = await this.biImplementationSE.getReportName();
-      this.biImplementationSE.currentReportName = report?.name;
+      this.biImplementationSE.currentReportName = report?.report_name;
       this.gATracking(reportPageName);
     } catch (error) {
       console.error(error);
@@ -153,7 +188,7 @@ export class BiComponent implements OnInit {
   }
 
   reportDescriptionInnerHtml() {
-    const element: any = document.getElementById('reportDescription');
+    const element: HTMLElement | null = document.getElementById('reportDescription');
     if (element) element.innerHTML = this.reportDescription;
-  }
+}
 }
