@@ -3,15 +3,15 @@
 </ng-container>
 
 <div class="inactive-alert" *ngIf="this.wasInactive">
-  <div class="inactive-alert__content">
-    <div class="inactive-alert__title">Inactive Report</div>
-    <div class="inactive-alert__description">
+  <div class="inactive-alert-content">
+    <div class="inactive-alert-title">Inactive Report</div>
+    <div class="inactive-alert-description">
       This report has been inactive for more than 10 minutes.
       <br />
       Please reload the page.
     </div>
 
-    <div class="inactive-alert__button">
+    <div class="inactive-alert-button">
       <button class="btn" (click)="this.reloadPage()">
         <i class="material-icons-round" style="font-size: 16px"> refresh </i>
         Reload Page
@@ -20,7 +20,7 @@
   </div>
 </div>
 
-<div class="fullScreen-container" *ngIf="this.showFullScreen">
+<div class="full-screen-container" *ngIf="this.showFullScreen">
   <button class="btn" (click)="toggleFullScreen()">
     <span>{{ isFullScreen ? 'Exit full Screen' : 'Full Screen' }}</span>
     <i class="material-icons-round" style="font-size: 16px">
@@ -33,15 +33,15 @@
 
 <div
   #reportContainer
-  id="reportContainer"
+  id="report-container"
   *ngIf="this.reportName"
   [style.height]="biHeight()"></div>
 
 <h1 *ngIf="!this.reportName">No reportName</h1>
 
-<div class="monitor_panel" *ngIf="this.showMonitorPanel">
+<div class="monitor-panel" *ngIf="this.showMonitorPanel">
   <div class="help">
-    <i class="help_icon material-icons-round"> help </i>
+    <i class="help-icon material-icons-round"> help </i>
     <div class="explanation">
       <div class="process">
         <i class="material-icons-round bad"> cancel </i>
