@@ -1,12 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BiImplementationService } from '../../services/bi-implementation.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { GetBiReports } from '../../shared/api.interface';
+
 @Component({
   selector: 'app-bi-list',
+  standalone: true,
+  imports: [RouterModule, CommonModule],
   templateUrl: './bi-list.component.html',
-  styleUrls: ['./bi-list.component.scss']
+  styleUrl: './bi-list.component.scss'
 })
-export class BiListComponent {
-  reportsInformation: any[] = [];
+export default class BiListComponent implements OnInit{
+  reportsInformation: GetBiReports[] = [];
 
   constructor(private biImplementationSE: BiImplementationService) {}
   ngOnInit(): void {
