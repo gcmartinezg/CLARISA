@@ -49,3 +49,6 @@ Thumbs.db
 
 # Nx cache
 .nx
+
+# example
+/example
