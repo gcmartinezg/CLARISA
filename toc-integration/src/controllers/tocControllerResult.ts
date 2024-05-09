@@ -12,8 +12,8 @@ export class tocController {
 
       res.json({ response: message });
     } catch (error) {
-      console.log(error.response);
-      return res.status(error.response).json(error.response.data);
+      console.error(error);
+      return res.status(500).json(error);
     }
   }
 
@@ -25,8 +25,18 @@ export class tocController {
 
       res.json({ response: "Hello Toc", message });
     } catch (error) {
-      console.log(error.response);
-      return res.status(error.response.status).json(error.response.data);
+      console.error(error);
+      return res.status(500).json(error);
+    }
+  }
+
+  async getHelloWorld(req: Request, res: Response) {
+    try {
+      res.status(200).json({ message: "Welcome to the ToC Integration 🍦" });
+    } catch (error) {
+      res.status(500).json({
+        error: "An error occurred at the time of making the request.",
+      });
     }
   }
 

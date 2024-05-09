@@ -2,47 +2,15 @@ import { Connection } from "typeorm";
 import { Database } from "../database/db";
 import { ValidatorTypes } from "../validators/validatorType";
 import { ErrorValidators } from "../validators/errorsValidators";
-import { CreateSdgResultsDto } from "../dto/tocSdgResults";
-import { TocSdgResultsSdgTargetsDto } from "../dto/tocSdgResultsSdgTargets";
-import { TocSdgResultsSdgIndicatorsDto } from "../dto/tocSdgResultsSdgIndicators";
-import { TocImpactAreaResultsDto } from "../dto/tocImpactAreaResults";
-import { TocImpactAreaResultsGlobalTargetsDto } from "../dto/tocImpactAreaResultsGlobalTargets";
-import { TocImpactAreaResultsImpactAreaIndicatorsDto } from "../dto/tocImpactAreaResultsImpactAreaIndicators";
-import { TocImpactAreaResultsSdgResultsDto } from "../dto/tocImpactAreaResultsSdgResults";
-import { TocActionAreaResultsDto } from "../dto/tocActionAreaResults";
-import { TocActionAreaResultsOutcomesIndicatorsDto } from "../dto/tocActionAreaResultsOutcomesIndicators";
-import { TocActionAreaResultsImpactAreaResultsDto } from "../dto/tocActionAreaResultsImpactAreaResults";
-import { TocResultsDto } from "../dto/tocResults";
-import { TocResultsActionAreaResultsDto } from "../dto/tocResultsActionAreaResults";
-import { TocResultsImpactAreaResultsDto } from "../dto/tocResultsImpactAreaResults";
-import { TocResultsSdgResultsDto } from "../dto/tocResultsSdgResults";
-import { TocSdgResultsSdgTargets } from "../entities/tocSdgResultsSdgTargets";
-import { TocResultsIndicatorsDto } from "../dto/tocResultsIndicators";
-import { TocResultsRegionsDto } from "../dto/tocResultsRegions";
-import { TocResultsCountriesDto } from "../dto/tocResultsCountries";
-import { TocResults } from "../entities/tocResults";
-import { TocImpactAreaResults } from "../entities/tocImpactAreaResults";
-import { TocActionAreaResults } from "../entities/tocActionAreaResults";
 import { TocSdgResults } from "../entities/tocSdgResults";
-import { TocSdgResultsSdgIndicators } from "../entities/tocSdgResultsSdgIndicators";
-import { TocImpactAreaResultsGlobalTargets } from "../entities/tocImpactAreaResultsGlobalTargets";
-import { TocImpactAreaResultsImpactAreaIndicators } from "../entities/tocImpactAreaResultsImpactAreaIndicators";
-import { TocImpactAreaResultsSdgResults } from "../entities/tocImpactAreaResultsSdgResults";
-import { TocActionAreaResultsOutcomesIndicators } from "../entities/tocActionAreaResultsOutcomesIndicators";
-import { TocActionAreaResultsImpactAreaResults } from "../entities/tocActionAreaResultsImpactAreaResults";
-import { TocResultsActionAreaResults } from "../entities/tocResultsActionAreaResults";
-import { TocResultsImpactAreaResults } from "../entities/tocResultsImpactAreaResults";
-import { TocResultsSdgResults } from "../entities/tocResultsSdgResults";
 import { TocResultsIndicators } from "../entities/tocResultsIndicators";
-import { TocResultsCountries } from "../entities/tocResultsCountries";
-import { TocResultsRegions } from "../entities/tocResultsRegions";
-
 import { SdgTarget } from "../entities/sdg_target";
 import axios from "axios";
 import { TocSdgsServices } from "./TocSdgsResults";
 import { TocResultImpactAreaServices } from "./TocImpactAreaResults";
 import { ActionAreaTocServices } from "./TocActionAreaResults";
 import { TocResultServices } from "./TocResultServices";
+import { TocOutputOutcomeRelationService } from "./TocOutputOutcomeRelations";
 import { sendSlackNotification } from "../validators/slackNotification";
 import { env } from "process";
 
@@ -53,6 +21,7 @@ export class TocServicesResults {
   public tocImpactAreas = new TocResultImpactAreaServices();
   public actionAreaToc = new ActionAreaTocServices();
   public resultsToc = new TocResultServices();
+  public outputOutcomeRelations = new TocOutputOutcomeRelationService();
   InformationSaving = null;
   async queryTest() {
     let database = new Database();
@@ -95,24 +64,43 @@ export class TocServicesResults {
     await queryRunner.connect();
 
     const getInitOfficialCodeQuery = `
-      SELECT 
-        *
-      FROM 
-        prdb.clarisa_initiatives ci
-      WHERE
-        ci.toc_id = ?
+    SELECT
+      i.official_code
+    FROM
+      ${env.OST_DB}.tocs t
+      INNER JOIN (
+        SELECT
+          max(t2.updated_at) AS max_date,
+          t2.initvStgId
+        FROM
+          ${env.OST_DB}.tocs t2
+          INNER JOIN ${env.OST_DB}.initiatives_by_stages ibs2 ON t2.initvStgId = ibs2.id
+        where
+          t2.active > 0
+          AND t2.type = 1
+        GROUP BY
+          t2.initvStgId
+      ) tr ON tr.initvStgId = t.initvStgId
+      AND tr.max_date = t.updated_at
+      INNER JOIN ${env.OST_DB}.initiatives_by_stages ibs ON t.initvStgId = ibs.id
+      INNER JOIN ${env.OST_DB}.initiatives i ON i.id = ibs.initiativeId
+    WHERE
+      t.active > 0
+      AND t.type = 1
+      AND t.toc_id = ?;
     `;
 
     const getInit = await queryRunner.query(getInitOfficialCodeQuery, [
       idInitiativeToc,
     ]);
     const officialCode = getInit[0]?.official_code;
+    console.log(`🚀 ~ Start sync with ${officialCode}`);
 
     try {
       const narrative = await axios({
         method: "get",
         url: tocHost,
-        timeout: 20000, // only wait for 2s
+        timeout: 20000,
       });
 
       if (
@@ -128,7 +116,6 @@ export class TocServicesResults {
           idInitiativeToc,
           narrative.data.phase
         );
-
         let impactAreaTocResults =
           await this.tocImpactAreas.saveImpactAreaTocResult(
             narrative.data.impact_area_results,
@@ -136,14 +123,12 @@ export class TocServicesResults {
             sdgTocResults.sdgResults,
             narrative.data.phase
           );
-
         let actionAreaResults = await this.actionAreaToc.saveActionAreaToc(
           narrative.data.action_area_results,
           idInitiativeToc,
           impactAreaTocResults.listImpactAreaResults,
           narrative.data.phase
         );
-
         let tocResult = await this.resultsToc.saveTocResults(
           narrative.data.output_outcome_results,
           sdgTocResults.sdgResults,
@@ -153,13 +138,22 @@ export class TocServicesResults {
           narrative.data.phase,
           narrative.data.version_id
         );
+        let relations =
+          await this.outputOutcomeRelations.saveRelationsOutputOutcomes(
+            narrative.data.relations,
+            narrative.data.phase,
+            idInitiativeToc
+          );
 
         this.InformationSaving = {
           ...sdgTocResults,
           ...impactAreaTocResults,
           ...actionAreaResults,
+          ...relations,
           ...tocResult,
         };
+      } else {
+        throw new Error("The properties are not in the object");
       }
 
       await this.saveInDataBase();
