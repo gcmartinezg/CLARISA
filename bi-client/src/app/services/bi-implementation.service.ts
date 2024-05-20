@@ -105,14 +105,12 @@ export class BiImplementationService {
 
   convertVariableToList(variables: string, param_type: string) {
     const varsList = variables?.split(',');
-    return param_type === 'int' ? varsList.map((v: string) => parseInt(v)) : varsList;
+    return param_type === 'int' ? varsList?.map((v: string) => parseInt(v)) : varsList;
   }
 
   applyFilters(filters: BiFilter[]) {
     filters.forEach((filter: BiFilter) => {
-      const variables = this.activatedRoute.snapshot.queryParams[filter?.variablename];
-      console.log(filter);
-      console.log(this.convertVariableToList(variables, filter?.param_type));
+      const variables = this.activatedRoute.snapshot?.queryParams[filter?.variablename];
       const filterConfig: pbi.models.IBasicFilter = {
         $schema: 'https://powerbi.com/product/schema#basic',
         target: {
@@ -123,9 +121,6 @@ export class BiImplementationService {
         values: this.convertVariableToList(variables, filter?.param_type),
         filterType: pbi.models.FilterType.Basic
       };
-
-      console.log(JSON?.stringify(filterConfig));
-      // Replace report's filters with the same target data field.
       try {
         this.report.updateFilters(pbi.models.FiltersOperations.Replace, [filterConfig]);
       } catch (errors) {

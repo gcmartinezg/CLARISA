@@ -48,7 +48,7 @@ export default class BiComponent implements OnInit {
   }
 
   runEvents() {
-    const eventName = this.activatedRoute.snapshot.paramMap.get('event') || '';
+    const eventName = this.activatedRoute.snapshot?.paramMap?.get('event') ?? '';
     if (eventName == 'monitor') {
       this.showMonitorPanel = true;
     }
@@ -137,8 +137,8 @@ export default class BiComponent implements OnInit {
   }
 
   getQueryParams() {
-    this.reportName = this.activatedRoute.snapshot.paramMap.get('reportName') || '';
-    this.sectionNumber = this.activatedRoute.snapshot.queryParams['sectionNumber'];
+    this.reportName = this.activatedRoute.snapshot?.paramMap?.get('reportName') ?? '';
+    this.sectionNumber = this.activatedRoute.snapshot?.queryParams['sectionNumber'];
   }
 
   biHeight() {
