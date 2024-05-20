@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BiImplementationService } from '../../services/bi-implementation.service';
 import { Title } from '@angular/platform-browser';
@@ -19,6 +19,11 @@ import { GetBiReport } from '../../shared/api.interface';
   styleUrl: './bi.component.scss'
 })
 export default class BiComponent implements OnInit {
+  biImplementationSE = inject(BiImplementationService);
+  activatedRoute = inject(ActivatedRoute);
+  titleService = inject(Title);
+  tabVisibilityService = inject(TabVisibilityService);
+  variablesSE = inject(VariablesService);
   reportName = '';
   sectionNumber = '';
   reportDescription = '';
@@ -26,13 +31,6 @@ export default class BiComponent implements OnInit {
   showFullScreen = false;
   wasInactive = false;
   showMonitorPanel = false;
-  constructor(
-    public biImplementationSE: BiImplementationService,
-    private activatedRoute: ActivatedRoute,
-    private titleService: Title,
-    private tabVisibilityService: TabVisibilityService,
-    public variablesSE: VariablesService
-  ) {}
 
   async ngOnInit() {
     this.runEvents();

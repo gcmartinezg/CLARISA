@@ -6,6 +6,8 @@ import { of } from 'rxjs';
 import { GetBiReport } from '../../src/app/shared/api.interface';
 
 describe('NavigationBarService', () => {
+  // let powerbi: pbi.service.Service;
+  let _mockReport: any;
   let service: BiImplementationService;
   const getBiReport: GetBiReport = {
     token: 'token',
@@ -40,6 +42,17 @@ describe('NavigationBarService', () => {
       ]
     });
     service = TestBed.inject(BiImplementationService);
+
+    _mockReport = {
+      on: jest.fn(),
+      off: jest.fn(),
+      bookmarksManager: {
+        getBookmarks: jest.fn().mockResolvedValue([
+          { name: '1', displayName: 'Bookmark 1' },
+          { name: '2', displayName: 'Bookmark 2' }
+        ])
+      }
+    };
   });
 
   it('should be created', () => {
@@ -103,6 +116,18 @@ describe('NavigationBarService', () => {
     it('should return a list of variables', () => {
       const reportName = service.getReportName();
       expect(reportName).toBeTruthy();
+    });
+  });
+  describe('getBookmarkName', () => {
+    it('should return a list of variables', () => {
+      const bookmarkName = service.getBookmarkName(_mockReport, 1);
+      expect(bookmarkName).toBeTruthy();
+    });
+  });
+  describe('detectButtonAndTable', () => {
+    it('should return a list of variables', () => {
+      const buttonAndTable = service.detectButtonAndTable(_mockReport, 'testTable');
+      expect(buttonAndTable).toBeTruthy();
     });
   });
 });

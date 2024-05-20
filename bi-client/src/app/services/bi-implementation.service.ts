@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as pbi from 'powerbi-client';
 import { ExportTablesService } from './export-tables.service';
@@ -14,12 +14,10 @@ import { GetBiReport, GetBiReports, Resp } from '../shared/api.interface';
   providedIn: 'root'
 })
 export class BiImplementationService {
-  constructor(
-    public http: HttpClient,
-    private exportTablesSE: ExportTablesService,
-    private variablesSE: VariablesService,
-    private activatedRoute: ActivatedRoute
-  ) {}
+  http = inject(HttpClient);
+  exportTablesSE = inject(ExportTablesService);
+  variablesSE = inject(VariablesService);
+  activatedRoute = inject(ActivatedRoute);
 
   apiBaseUrl = environment.apiBaseUrl + 'result-dashboard-bi';
   report: pbi.Report = {} as pbi.Report;
@@ -77,7 +75,6 @@ export class BiImplementationService {
         pbi.factories.routerFactory
       );
       this.report = powerbi.embed(embedContainer, config) as pbi.Report;
-      console.log(this.report);
 
       this.report.off('loaded');
       this.report.on('loaded', () => {
@@ -154,7 +151,6 @@ export class BiImplementationService {
   }
 
   exportButton(report: pbi.Report) {
-    // Insert here the code you want to run after the report is rendered
     // report.off removes all event handlers for a specific event
     report.off('bookmarkApplied');
     // report.on will add an event listener.
