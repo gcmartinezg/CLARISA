@@ -55,7 +55,7 @@ export default class BiComponent implements OnInit {
   }
 
   reloadPage() {
-    window.location.reload();
+    window.location?.reload();
   }
 
   toggleFullScreen() {
