@@ -3,14 +3,23 @@ import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import BiComponent from '../../src/app/pages/bi/bi.component';
+import { EventEmitter } from '@angular/core';
+import { TabVisibilityService } from '../../src/app/services/tab-visibility.service';
 
 describe('BiComponent', () => {
   let component: BiComponent;
   let fixture: ComponentFixture<BiComponent>;
+  let tabVisibilityServiceStub: Partial<TabVisibilityService>;
+  let tabVisibilityEmitter: EventEmitter<boolean>;
   beforeEach(async () => {
+    tabVisibilityEmitter = new EventEmitter<boolean>();
+    tabVisibilityServiceStub = {
+      tabVisibilityChanged: tabVisibilityEmitter
+    };
     await TestBed.configureTestingModule({
       imports: [BiComponent, HttpClientModule],
       providers: [
+        { provide: TabVisibilityService, useValue: tabVisibilityServiceStub },
         {
           provide: ActivatedRoute,
           useValue: {
@@ -46,6 +55,11 @@ describe('BiComponent', () => {
       );
       component.ngOnInit();
       expect(getBiReportWithCredentialsByreportNameSpy).toHaveBeenCalled();
+    });
+    test('should set wasInactive to true when isTabInactiveFor10Minutes is true', () => {
+      component.ngOnInit();
+      tabVisibilityEmitter.emit(true);
+      expect(component.wasInactive).toBe(true);
     });
   });
   describe('reloadPage ', () => {
