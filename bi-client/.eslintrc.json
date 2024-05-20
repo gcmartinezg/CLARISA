@@ -26,6 +26,25 @@
             "prefix": "app",
             "style": "kebab-case"
           }
+        ],
+        "no-underscore-dangle": [
+          "error",
+          {
+            "allow": ["_"]
+          }
+        ],
+        "no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_"
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": [
+          "error",
+          {
+            "ignoreRestArgs": true
+          }
         ]
       }
     },
