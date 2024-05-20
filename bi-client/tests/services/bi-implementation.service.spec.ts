@@ -133,5 +133,25 @@ describe('NavigationBarService', () => {
       const buttonAndTable = service.detectButtonAndTable(_mockReport, 'export_data');
       expect(buttonAndTable).toBeTruthy();
     });
+    it('should process the export when bookmarkName is "export_data"', async () => {
+      // Mock the necessary methods to reach inside the try block
+      const mockGetPages = jest.fn().mockResolvedValue([
+        {
+          isActive: true,
+          getVisuals: jest
+            .fn()
+            .mockResolvedValue([{ title: { search: jest.fn().mockReturnValue(0) } }])
+        }
+      ]);
+      _mockReport.getPages = mockGetPages;
+
+      const mockExportData = jest.fn().mockResolvedValue({ data: 'mockData' });
+      const visual = { exportData: mockExportData };
+      _mockReport.visual = visual;
+
+      await service.detectButtonAndTable(_mockReport, 'export_data');
+
+      expect(mockGetPages).toHaveBeenCalled();
+    });
   });
 });
