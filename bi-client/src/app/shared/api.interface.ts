@@ -22,7 +22,7 @@ export interface Resp<T> {
 export interface GetBiReport {
   token: string;
   azureValidation: number;
-  filters?: BiFilter[];
+  filters: BiFilter[];
   report: Report;
 }
 

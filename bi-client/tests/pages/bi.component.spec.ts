@@ -50,6 +50,7 @@ describe('BiComponent', () => {
       component.ngOnInit();
       expect(runEventsSpy).toHaveBeenCalled();
     });
+
     test('should call getQueryParams', () => {
       const getQueryParamsSpy = jest.spyOn(component, 'getQueryParams');
       component.ngOnInit();
