@@ -23,7 +23,14 @@ describe('BiComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: of({ id: 'testId' })
+            snapshot: {
+              paramMap: {
+                get: jest.fn().mockReturnValue('monitor') // Puedes cambiar este valor según la prueba
+              },
+              queryParams: {
+                sectionNumber: '1'
+              }
+            }
           }
         }
       ]
