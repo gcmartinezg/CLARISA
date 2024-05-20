@@ -45,7 +45,7 @@ export class BiImplementationService {
   }
 
   renderReport(
-    { token, report }: GetBiReport,
+    { token, report, filters }: GetBiReport,
     reportName: string,
     pageName?: string
   ): Promise<void> {
@@ -68,16 +68,20 @@ export class BiImplementationService {
         },
         pageName
       };
-      const embedContainer: HTMLElement = document.getElementById('reportContainer') as HTMLElement;
+      const embedContainer: HTMLElement = document.getElementById(
+        'report-container'
+      ) as HTMLElement;
       const powerbi = new pbi.service.Service(
         pbi.factories.hpmFactory,
         pbi.factories.wpmpFactory,
         pbi.factories.routerFactory
       );
+
       this.report = powerbi.embed(embedContainer, config) as pbi.Report;
 
       this.report.off('loaded');
       this.report.on('loaded', () => {
+        this.applyFilters(filters);
         this.variablesSE.processes[3].works = true;
         this.showGlobalLoader = false;
       });
@@ -117,11 +121,9 @@ export class BiImplementationService {
         values: this.convertVariableToList(variables, filter?.param_type),
         filterType: pbi.models.FilterType.Basic
       };
-      try {
-        this.report.updateFilters(pbi.models.FiltersOperations.Replace, [filterConfig]);
-      } catch (errors) {
-        console.error(errors);
-      }
+      this.report.updateFilters(pbi.models.FiltersOperations.Replace, [filterConfig]).catch(err => {
+        console.error(err);
+      });
     });
   }
 
@@ -200,7 +202,7 @@ export class BiImplementationService {
       const dateTime = dateText1[1].split(':').join('');
 
       await this.exportTablesSE.exportExcel(
-        result?.data || '',
+        result?.data ?? '',
         `export_data_table_results_${dateCET}_${dateTime.trim()}CET`
       );
       IBDGoogleAnalytics().trackEvent('download xlsx', 'file name');
