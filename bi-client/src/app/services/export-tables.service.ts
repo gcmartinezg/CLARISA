@@ -33,8 +33,6 @@ export class ExportTablesService {
   async exportExcel(csvText: string, fileName: string, wscols?: Wscols[]): Promise<void> {
     return new Promise((resolve, reject) => {
       this.localCsvToJson(csvText).then(list => {
-        console.log(list);
-
         import('xlsx').then(
           xlsx => {
             const worksheet = xlsx.utils.json_to_sheet(list as Wscols[], {
