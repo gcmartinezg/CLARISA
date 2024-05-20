@@ -91,7 +91,6 @@ export class BiImplementationService {
       );
 
       this.report.on('error', (err: pbi.service.ICustomEvent<{ e: string }>) => {
-        console.log('Error');
         console.error(err);
         this.variablesSE.processes[3].works = false;
         reject(new Error(err.detail.e)); // Pass the error message as the argument
@@ -172,7 +171,7 @@ export class BiImplementationService {
   }
 
   async detectButtonAndTable(report: pbi.Report, bookmarkName: string | undefined) {
-    if (!bookmarkName || bookmarkName.search('export_data') < 0) return;
+    if (!bookmarkName || bookmarkName.search('export_data') < 0) return 0;
     console.log('Exporting data...\n');
     this.showExportSpinner = true;
     try {
@@ -210,5 +209,6 @@ export class BiImplementationService {
     }
 
     this.showExportSpinner = false;
+    return 1;
   }
 }

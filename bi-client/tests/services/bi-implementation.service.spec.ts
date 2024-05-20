@@ -125,8 +125,12 @@ describe('NavigationBarService', () => {
     });
   });
   describe('detectButtonAndTable', () => {
+    it('Shoud return undefined if bookmarkName is not found', async () => {
+      const buttonAndTable = await service.detectButtonAndTable(_mockReport, undefined);
+      expect(buttonAndTable).toBe(0);
+    });
     it('should return a list of variables', () => {
-      const buttonAndTable = service.detectButtonAndTable(_mockReport, 'testTable');
+      const buttonAndTable = service.detectButtonAndTable(_mockReport, 'export_data');
       expect(buttonAndTable).toBeTruthy();
     });
   });
