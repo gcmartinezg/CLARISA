@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { MisService } from './mis.service';
 import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
-import { ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { MisDto } from './dto/mis.dto';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
 import { PermissionGuard } from '../../shared/guards/permission.guard';
@@ -22,6 +22,7 @@ import { CreateMisDto } from './dto/create-mis.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('MIS')
 export class MisController {
   constructor(private readonly _misService: MisService) {}
 
