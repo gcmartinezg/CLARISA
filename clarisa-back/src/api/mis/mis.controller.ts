@@ -17,9 +17,11 @@ import { UpdateMisDto } from './dto/update-mis.dto';
 import { Mis } from './entities/mis.entity';
 import { Response } from 'express';
 import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('MIS')
 export class MisController {
   constructor(private readonly misService: MisService) {}
 
