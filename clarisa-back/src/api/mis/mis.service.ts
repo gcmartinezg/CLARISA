@@ -28,6 +28,13 @@ export class MisService {
     }
   }
 
+  async findOneByAcronym(acronym: string): Promise<Mis> {
+    return await this.misRepository.findOneBy({
+      acronym,
+      auditableFields: { is_active: true },
+    });
+  }
+
   async findOne(id: number): Promise<Mis> {
     return await this.misRepository.findOneBy({
       id,

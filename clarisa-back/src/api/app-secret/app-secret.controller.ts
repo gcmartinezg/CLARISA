@@ -1,9 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { AppSecretService } from './app-secret.service';
 import { CreateAppSecretDto } from './dto/create-app-secret.dto';
-import { UpdateAppSecretDto } from './dto/update-app-secret.dto';
+import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
 
-@Controller('app-secret')
+@Controller('')
 export class AppSecretController {
   constructor(private readonly appSecretService: AppSecretService) {}
 
@@ -13,22 +21,12 @@ export class AppSecretController {
   }
 
   @Get()
-  findAll() {
-    return this.appSecretService.findAll();
+  findAll(@Query('show') show: FindAllOptions) {
+    return this.appSecretService.findAll(show);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get('get/:id')
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.appSecretService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAppSecretDto: UpdateAppSecretDto) {
-    return this.appSecretService.update(+id, updateAppSecretDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.appSecretService.remove(+id);
   }
 }

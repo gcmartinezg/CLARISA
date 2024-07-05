@@ -1,16 +1,17 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { EnvironmentService } from './environment.service';
+import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
 
-@Controller('environment')
+@Controller()
 export class EnvironmentController {
   constructor(private readonly environmentService: EnvironmentService) {}
 
   @Get()
-  findAll() {
-    return this.environmentService.findAll();
+  findAll(@Query('show') show: FindAllOptions) {
+    return this.environmentService.findAll(show);
   }
 
-  @Get(':id')
+  @Get('get/:id')
   findOne(@Param('id') id: string) {
     return this.environmentService.findOne(+id);
   }

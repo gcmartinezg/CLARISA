@@ -6,5 +6,6 @@ import { MisRepository } from './repositories/mis.repository';
 @Module({
   controllers: [MisController],
   providers: [MisService, MisRepository],
+  exports: [MisService],
 })
 export class MisModule {}
