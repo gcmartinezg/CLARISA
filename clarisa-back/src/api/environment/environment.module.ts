@@ -13,5 +13,6 @@ import { BasicDtoMapper } from '../../shared/mappers/basic-dto.mapper';
     EnvironmentMapper,
     BasicDtoMapper,
   ],
+  exports: [EnvironmentService, EnvironmentRepository],
 })
 export class EnvironmentModule {}

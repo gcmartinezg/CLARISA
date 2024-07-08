@@ -43,6 +43,18 @@ export class EnvironmentService {
     );
   }
 
+  async findOneByAcronym(acronym: string): Promise<EnvironmentDto> {
+    const environment: Environment =
+      await this._environmentRepository.findOneBy({
+        acronym,
+        auditableFields: { is_active: true },
+      });
+
+    return environment
+      ? this._environmentMapper.classToDto(environment, true)
+      : null;
+  }
+
   async findOne(id: number): Promise<EnvironmentDto> {
     const environment: Environment =
       await this._environmentRepository.findOneBy({
