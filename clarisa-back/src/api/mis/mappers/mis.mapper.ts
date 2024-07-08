@@ -15,7 +15,7 @@ export class MisMapper {
     simpleMisDto.acronym = mis.acronym;
 
     if (mis.environment_object) {
-      simpleMisDto.environment = mis.environment_object.name;
+      simpleMisDto.environment = mis.environment_object.acronym;
     }
 
     return simpleMisDto;
