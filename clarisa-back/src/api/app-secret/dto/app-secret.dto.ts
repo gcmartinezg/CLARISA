@@ -1,6 +1,6 @@
-export class AppSecretDto {
+import { CreateAppSecretDto } from './create-app-secret.dto';
+
+export class AppSecretDto extends CreateAppSecretDto {
   client_id: string;
-  sender_mis: string;
-  receiver_mis: string;
   secret?: string;
 }
