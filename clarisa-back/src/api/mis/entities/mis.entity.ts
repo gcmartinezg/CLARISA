@@ -28,7 +28,7 @@ export class Mis {
 
   // relations
   @Column()
-  main_contact_point_id: string;
+  main_contact_point_id: number;
 
   @Column({ type: 'number', nullable: true })
   environment_id: number;
