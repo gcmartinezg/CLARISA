@@ -12,6 +12,8 @@ export class MisMapper {
 
     Object.assign(simpleMisDto, this._basicMDtoMapper.classToDto(mis, false));
 
+    simpleMisDto.acronym = mis.acronym;
+
     if (mis.environment_object) {
       simpleMisDto.environment = mis.environment_object.name;
     }
