@@ -69,6 +69,7 @@ import { SecondOrderAdministrativeDivisionModule } from './second-order-administ
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { FundingSourceModule } from './funding-source/funding-source.module';
 import { CenterModule } from './center/center.module';
+import { MicroserviceMonitoringTestLinkModule } from './microservice-monitoring-test-link/microservice-monitoring-test-link.module';
 
 export const apiRoutes = [
   {
@@ -354,5 +355,9 @@ export const apiRoutes = [
   {
     path: 'centers',
     module: CenterModule,
+  },
+  {
+    path: 'monitor-test-links',
+    module: MicroserviceMonitoringTestLinkModule,
   },
 ];
