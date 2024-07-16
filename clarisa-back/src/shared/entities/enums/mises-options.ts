@@ -30,7 +30,7 @@ export class MisOption {
   public static getAsEnumLikeObject(): { [key: string]: string } {
     const enumeration: { [key: string]: string } = {};
     (Object.values(this) as MisOption[]).forEach((mo) => {
-      enumeration[mo.path.toUpperCase()] = String(mo.mis_id);
+      enumeration[mo.path.toUpperCase()] = mo.path;
     });
 
     return enumeration;

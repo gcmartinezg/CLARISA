@@ -4,7 +4,7 @@ import { UpdateBusinessCategoryDto } from './dto/update-business-category.dto';
 import { BusinessCategory } from './entities/business-category.entity';
 import { BusinessCategoryRepository } from './repositories/business-category.repository';
 import { FindOptionsSelect } from 'typeorm';
-import { BusinessCategoryDto } from './dto/business-category.dto';
+import { BasicDtoV1 } from '../../shared/entities/dtos/basic.v1.dto';
 
 @Injectable()
 export class BusinessCategoryService {
@@ -18,7 +18,7 @@ export class BusinessCategoryService {
 
   async findAll(
     option: FindAllOptions = FindAllOptions.SHOW_ONLY_ACTIVE,
-  ): Promise<BusinessCategoryDto[]> {
+  ): Promise<BasicDtoV1[]> {
     switch (option) {
       case FindAllOptions.SHOW_ALL:
         return await this.businessCategoriesRepository.find({
@@ -39,7 +39,7 @@ export class BusinessCategoryService {
     }
   }
 
-  async findOne(id: number): Promise<BusinessCategoryDto> {
+  async findOne(id: number): Promise<BasicDtoV1> {
     return await this.businessCategoriesRepository.findOne({
       where: { id, auditableFields: { is_active: true } },
       select: this._select,

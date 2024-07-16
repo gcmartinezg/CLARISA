@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class BasicDto {
+export class BasicDtoV1 {
   @ApiProperty({
     description: 'The id of the entity',
     minimum: 1,
     oneOf: [{ type: 'number' }, { type: 'string' }],
   })
-  code: string | number;
+  id: string | number;
 
   @ApiProperty({
     description: 'The name of the entity',

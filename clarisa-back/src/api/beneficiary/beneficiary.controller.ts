@@ -24,7 +24,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { BeneficiaryDto } from './dto/beneficiary.dto';
+import { BasicDtoV1 } from '../../shared/entities/dtos/basic.v1.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -40,7 +40,7 @@ export class BeneficiaryController {
     description:
       'Show active, inactive or all beneficiaries. Defaults to active.',
   })
-  @ApiOkResponse({ type: [BeneficiaryDto] })
+  @ApiOkResponse({ type: [BasicDtoV1] })
   async findAll(@Query('show') show: FindAllOptions) {
     return await this.beneficiaryService.findAll(show);
   }
@@ -52,7 +52,7 @@ export class BeneficiaryController {
     required: true,
     description: 'The id of the beneficiary',
   })
-  @ApiOkResponse({ type: [BeneficiaryDto] })
+  @ApiOkResponse({ type: [BasicDtoV1] })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return await this.beneficiaryService.findOne(id);
   }

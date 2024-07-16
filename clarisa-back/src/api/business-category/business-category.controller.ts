@@ -24,7 +24,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { BusinessCategoryDto } from './dto/business-category.dto';
+import { BasicDtoV1 } from '../../shared/entities/dtos/basic.v1.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -42,7 +42,7 @@ export class BusinessCategoryController {
     description:
       'Show active, inactive or all business categories. Defaults to active.',
   })
-  @ApiOkResponse({ type: [BusinessCategoryDto] })
+  @ApiOkResponse({ type: [BasicDtoV1] })
   async findAll(@Query('show') show: FindAllOptions) {
     return await this.businessCategoryService.findAll(show);
   }
@@ -54,7 +54,7 @@ export class BusinessCategoryController {
     required: true,
     description: 'The id of the business category',
   })
-  @ApiOkResponse({ type: [BusinessCategoryDto] })
+  @ApiOkResponse({ type: [BasicDtoV1] })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return await this.businessCategoryService.findOne(id);
   }

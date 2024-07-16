@@ -12,7 +12,7 @@ import { CgiarEntityTypeService } from './cgiar-entity-type.service';
 import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
 import { ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CgiarEntityTypeDtoV2 } from './dto/cgiar-entity-type.v2.dto';
-import { BasicDto } from '../../shared/entities/dtos/basic-dto';
+import { BasicDtoV2 } from '../../shared/entities/dtos/basic.v2.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -31,7 +31,7 @@ export class CgiarEntityTypeController {
     description:
       'Show active, inactive or all CGIAR entity types. Defaults to active.',
   })
-  @ApiOkResponse({ type: [BasicDto] })
+  @ApiOkResponse({ type: [BasicDtoV2] })
   async findAllV1(@Query('show') show: FindAllOptions) {
     return await this.cgiarEntityTypeService.findAllV1(show);
   }
@@ -44,7 +44,7 @@ export class CgiarEntityTypeController {
     required: true,
     description: 'The id of the CGIAR entity type',
   })
-  @ApiOkResponse({ type: [BasicDto] })
+  @ApiOkResponse({ type: [BasicDtoV2] })
   async findOneV1(@Param('id', ParseIntPipe) id: number) {
     return await this.cgiarEntityTypeService.findOneV1(id);
   }

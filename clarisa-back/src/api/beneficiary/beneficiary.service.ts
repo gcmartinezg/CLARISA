@@ -4,7 +4,7 @@ import { UpdateBeneficiaryDto } from './dto/update-beneficiary.dto';
 import { Beneficiary } from './entities/beneficiary.entity';
 import { BeneficiaryRepository } from './repositories/beneficiary.repository';
 import { FindOptionsSelect } from 'typeorm';
-import { BeneficiaryDto } from './dto/beneficiary.dto';
+import { BasicDtoV1 } from '../../shared/entities/dtos/basic.v1.dto';
 
 @Injectable()
 export class BeneficiaryService {
@@ -16,7 +16,7 @@ export class BeneficiaryService {
 
   async findAll(
     option: FindAllOptions = FindAllOptions.SHOW_ONLY_ACTIVE,
-  ): Promise<BeneficiaryDto[]> {
+  ): Promise<BasicDtoV1[]> {
     switch (option) {
       case FindAllOptions.SHOW_ALL:
         return await this.beneficiaryRepository.find({
@@ -37,7 +37,7 @@ export class BeneficiaryService {
     }
   }
 
-  async findOne(id: number): Promise<BeneficiaryDto> {
+  async findOne(id: number): Promise<BasicDtoV1> {
     return await this.beneficiaryRepository.findOne({
       where: { id, auditableFields: { is_active: true } },
       select: this._select,

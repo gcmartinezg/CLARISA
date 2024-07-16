@@ -27,12 +27,14 @@ import {
   ApiOkResponse,
   ApiParam,
   ApiQuery,
+  ApiTags,
 } from '@nestjs/swagger';
 import { PartnerStatus } from '../../shared/entities/enums/partner-status';
 import { MisOption } from '../../shared/entities/enums/mises-options';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('Country Office Requests')
 export class CountryOfficeRequestController {
   constructor(
     private readonly countryOfficeRequestService: CountryOfficeRequestService,

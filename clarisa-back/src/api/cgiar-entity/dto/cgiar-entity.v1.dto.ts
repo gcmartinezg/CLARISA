@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BasicDto } from '../../../shared/entities/dtos/basic-dto';
+import { BasicDtoV2 } from '../../../shared/entities/dtos/basic.v2.dto';
 
-export class CgiarEntityDtoV1 extends BasicDto {
+export class CgiarEntityDtoV1 extends BasicDtoV2 {
   @ApiProperty({
     description: 'The acronym of the CGIAR entity',
     type: String,
@@ -23,7 +23,7 @@ export class CgiarEntityDtoV1 extends BasicDto {
 
   @ApiProperty({
     description: 'The type of the CGIAR entity',
-    type: BasicDto,
+    type: BasicDtoV2,
   })
-  cgiarEntityTypeDTO: BasicDto;
+  cgiarEntityTypeDTO: BasicDtoV2;
 }
