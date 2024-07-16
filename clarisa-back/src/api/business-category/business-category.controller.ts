@@ -17,25 +17,50 @@ import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
 import { BusinessCategoryService } from './business-category.service';
 import { UpdateBusinessCategoryDto } from './dto/update-business-category.dto';
 import { BusinessCategory } from './entities/business-category.entity';
+import {
+  ApiExcludeEndpoint,
+  ApiOkResponse,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { BusinessCategoryDto } from './dto/business-category.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('Business Categories')
 export class BusinessCategoryController {
   constructor(
     private readonly businessCategoryService: BusinessCategoryService,
   ) {}
 
   @Get()
+  @ApiQuery({
+    name: 'show',
+    enum: FindAllOptions,
+    required: false,
+    description:
+      'Show active, inactive or all business categories. Defaults to active.',
+  })
+  @ApiOkResponse({ type: [BusinessCategoryDto] })
   async findAll(@Query('show') show: FindAllOptions) {
     return await this.businessCategoryService.findAll(show);
   }
 
   @Get('get/:id')
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    description: 'The id of the business category',
+  })
+  @ApiOkResponse({ type: [BusinessCategoryDto] })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return await this.businessCategoryService.findOne(id);
   }
 
   @Patch('update')
+  @ApiExcludeEndpoint()
   async update(
     @Res() res: Response,
     @Body() updateBusinessCategoryDtoList: UpdateBusinessCategoryDto[],
