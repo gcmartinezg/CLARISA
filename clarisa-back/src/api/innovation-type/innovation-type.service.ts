@@ -12,7 +12,7 @@ export class InnovationTypeService {
 
   async findAll(
     option: FindAllOptions = FindAllOptions.SHOW_ONLY_ACTIVE,
-    type: string = SourceOption.CGIAR.path,
+    type: string = SourceOption.ONE_CGIAR.path,
   ): Promise<InnovationType[]> {
     let whereClause: FindOptionsWhere<InnovationType> = {};
     const incomingType = SourceOption.getfromPath(type);
@@ -21,7 +21,7 @@ export class InnovationTypeService {
       case SourceOption.ALL.path:
         // do nothing. no extra conditions needed
         break;
-      case SourceOption.CGIAR.path:
+      case SourceOption.ONE_CGIAR.path:
       case SourceOption.LEGACY.path:
       case SourceOption.INNOVATION_CATALOG.path:
         whereClause = {

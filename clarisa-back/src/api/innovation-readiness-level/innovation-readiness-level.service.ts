@@ -14,7 +14,7 @@ export class InnovationReadinessLevelService {
 
   async findAll(
     option: FindAllOptions = FindAllOptions.SHOW_ONLY_ACTIVE,
-    type: string = SourceOption.CGIAR.path,
+    type: string = SourceOption.ONE_CGIAR.path,
   ): Promise<InnovationReadinessLevel[]> {
     let whereClause: FindOptionsWhere<InnovationReadinessLevel> = {};
     const incomingType = SourceOption.getfromPath(type);
@@ -23,7 +23,7 @@ export class InnovationReadinessLevelService {
       case SourceOption.ALL.path:
         // do nothing. no extra conditions needed
         break;
-      case SourceOption.CGIAR.path:
+      case SourceOption.ONE_CGIAR.path:
       case SourceOption.LEGACY.path:
       case SourceOption.INNOVATION_CATALOG.path:
         whereClause = {

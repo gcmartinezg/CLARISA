@@ -12,7 +12,7 @@ export class PolicyTypeService {
 
   async findAll(
     option: FindAllOptions = FindAllOptions.SHOW_ONLY_ACTIVE,
-    type: string = SourceOption.CGIAR.path,
+    type: string = SourceOption.ONE_CGIAR.path,
   ): Promise<PolicyType[]> {
     let whereClause: FindOptionsWhere<PolicyType> = {};
     const incomingType = SourceOption.getfromPath(type);
@@ -21,7 +21,7 @@ export class PolicyTypeService {
       case SourceOption.ALL.path:
         // do nothing. no extra conditions needed
         break;
-      case SourceOption.CGIAR.path:
+      case SourceOption.ONE_CGIAR.path:
         whereClause = {
           ...whereClause,
           source_id: incomingType.source_id,

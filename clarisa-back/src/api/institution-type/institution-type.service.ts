@@ -18,7 +18,7 @@ export class InstitutionTypeService {
 
   async findAll(
     option: FindAllOptions = FindAllOptions.SHOW_ONLY_ACTIVE,
-    type: string = SourceOption.CGIAR.path,
+    type: string = SourceOption.ONE_CGIAR.path,
   ): Promise<InstitutionTypeDto[]> {
     if (!Object.values<string>(FindAllOptions).includes(option)) {
       throw Error('?!');
@@ -36,7 +36,7 @@ export class InstitutionTypeService {
 
   async findAllFromParentToChildren(
     option: FindAllOptions = FindAllOptions.SHOW_ONLY_ACTIVE,
-    type: string = SourceOption.CGIAR.path,
+    type: string = SourceOption.ONE_CGIAR.path,
   ): Promise<InstitutionTypeFromParentDto[]> {
     if (!Object.values<string>(FindAllOptions).includes(option)) {
       throw Error('?!');
@@ -54,7 +54,7 @@ export class InstitutionTypeService {
 
   async findAllSimple(
     option: FindAllOptions = FindAllOptions.SHOW_ONLY_ACTIVE,
-    type: string = SourceOption.CGIAR.path,
+    type: string = SourceOption.ONE_CGIAR.path,
   ): Promise<InstitutionTypeDto[]> {
     if (!Object.values<string>(FindAllOptions).includes(option)) {
       throw Error('?!');
@@ -84,7 +84,7 @@ export class InstitutionTypeService {
       case SourceOption.ALL.path:
         // do nothing. no extra conditions needed
         break;
-      case SourceOption.CGIAR.path:
+      case SourceOption.ONE_CGIAR.path:
       case SourceOption.LEGACY.path:
         whereClause = {
           ...whereClause,
