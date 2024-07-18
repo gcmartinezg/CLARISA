@@ -1,4 +1,4 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { AuditableEntity } from '../../../shared/entities/extends/auditable-entity.entity';
 import { ImpactAreaIndicator } from '../../impact-area-indicator/entities/impact-area-indicator.entity';
@@ -16,7 +16,6 @@ export class ImpactArea {
   description: string;
 
   @Column({ type: 'varchar', length: 10, nullable: true })
-  @Expose({ name: 'financialCode' })
   financial_code: string;
 
   @Column({ type: 'text', nullable: true })
