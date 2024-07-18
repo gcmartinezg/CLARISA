@@ -28,7 +28,7 @@ export class InstitutionTypeService {
       throw Error('?!');
     }
 
-    return this._institutionTypesRepository.findAllTypesFromChildrenToParent(
+    return this._institutionTypesRepository.findTypesFromChildrenToParent(
       option,
       type,
     );
@@ -105,11 +105,14 @@ export class InstitutionTypeService {
     );
   }
 
-  async findOne(id: number): Promise<InstitutionType> {
-    return await this._institutionTypesRepository.findOneBy({
-      id,
-      auditableFields: { is_active: true },
-    });
+  async findOne(id: number): Promise<InstitutionTypeDto> {
+    const result =
+      await this._institutionTypesRepository.findTypesFromChildrenToParent(
+        FindAllOptions.SHOW_ONLY_ACTIVE,
+        SourceOption.ONE_CGIAR.path,
+        id,
+      );
+    return result.length === 1 ? result[0] : null;
   }
 
   async update(updateInstitutionTypeDto: UpdateInstitutionTypeDto[]) {

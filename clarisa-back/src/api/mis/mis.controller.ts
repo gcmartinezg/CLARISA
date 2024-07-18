@@ -17,7 +17,14 @@ import { UpdateMisDto } from './dto/update-mis.dto';
 import { Mis } from './entities/mis.entity';
 import { Response } from 'express';
 import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiExcludeEndpoint,
+  ApiOkResponse,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { MisDto } from './dto/mis.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -26,16 +33,31 @@ export class MisController {
   constructor(private readonly misService: MisService) {}
 
   @Get()
+  @ApiQuery({
+    name: 'show',
+    enum: FindAllOptions,
+    required: false,
+    description: 'Show active, inactive or all MISes. Defaults to active.',
+  })
+  @ApiOkResponse({ type: [MisDto] })
   async findAll(@Query('show') show: FindAllOptions) {
     return await this.misService.findAll(show);
   }
 
   @Get('get/:id')
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    description: 'The id of the MIS',
+  })
+  @ApiOkResponse({ type: [MisDto] })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return await this.misService.findOne(id);
   }
 
   @Patch('update')
+  @ApiExcludeEndpoint()
   async update(@Res() res: Response, @Body() updateMisDtoList: UpdateMisDto[]) {
     try {
       const result: Mis[] = await this.misService.update(updateMisDtoList);

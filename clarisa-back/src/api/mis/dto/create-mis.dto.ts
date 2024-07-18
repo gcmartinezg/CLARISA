@@ -1,7 +1,7 @@
 import { AuditableDto } from '../../../shared/entities/dtos/auditable-dto';
 
 export class CreateMisDto extends AuditableDto {
-  name: number;
+  name: string;
 
   acronym: string;
 

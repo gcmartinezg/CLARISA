@@ -13,6 +13,7 @@ import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
 import { ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CgiarEntityDtoV1 } from './dto/cgiar-entity.v1.dto';
 import { CgiarEntityDtoV2 } from './dto/cgiar-entity.v2.dto';
+import { CgiarEntityTypeOption } from '../../shared/entities/enums/cgiar-entity-types';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -28,6 +29,13 @@ export class CgiarEntityController {
     required: false,
     description:
       'Show active, inactive or all CGIAR entities. Defaults to active.',
+  })
+  @ApiQuery({
+    name: 'type',
+    enum: CgiarEntityTypeOption.getAsEnumLikeObject(),
+    required: false,
+    description:
+      'Show CGIAR entities of a specific type. Defaults to all types.',
   })
   @ApiOkResponse({ type: [CgiarEntityDtoV1] })
   async findAllV1(

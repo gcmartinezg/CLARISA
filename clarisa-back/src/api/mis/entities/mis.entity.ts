@@ -19,7 +19,7 @@ export class Mis {
   id: number;
 
   @Column({ type: 'text', nullable: false })
-  name: number;
+  name: string;
 
   @Column({ type: 'text', nullable: false })
   acronym: string;
@@ -32,7 +32,6 @@ export class Mis {
 
   @ManyToOne(() => User, (u) => u.mis_array)
   @JoinColumn({ name: 'main_contact_point_id' })
-  //@Expose()
   contact_point_object: User;
 
   @OneToMany(() => PartnerRequest, (pr) => pr.institution_type_object)
