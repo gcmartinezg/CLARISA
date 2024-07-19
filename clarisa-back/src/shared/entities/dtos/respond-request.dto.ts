@@ -6,6 +6,7 @@ export class RespondRequestDto {
     description: 'The code of the request to respond',
     type: Number,
     minimum: 1,
+    required: true,
   })
   @Min(1)
   requestId: number;
@@ -14,6 +15,7 @@ export class RespondRequestDto {
     description: 'The id of the user responding to the request',
     type: Number,
     minimum: 1,
+    required: true,
   })
   @Min(1)
   userId: number;
@@ -21,12 +23,13 @@ export class RespondRequestDto {
   @ApiProperty({
     description: 'Is the request being accepted or rejected?',
     type: Boolean,
+    required: true,
   })
   @IsNotEmpty()
   accept: boolean;
 
   @ApiProperty({
-    description: 'The accronym of the source responding to the request',
+    description: 'The acronym of the source responding to the request',
     type: String,
   })
   misAcronym: string;
@@ -42,6 +45,7 @@ export class RespondRequestDto {
   @ApiProperty({
     description: 'The email of the user that created the request',
     type: String,
+    required: true,
   })
   @IsEmail()
   externalUserMail: string;
@@ -49,6 +53,7 @@ export class RespondRequestDto {
   @ApiProperty({
     description: 'The name of the user that created the request',
     type: String,
+    required: true,
   })
   externalUserName: string;
 

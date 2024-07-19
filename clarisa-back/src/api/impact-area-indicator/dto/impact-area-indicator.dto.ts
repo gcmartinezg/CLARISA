@@ -51,5 +51,5 @@ export class ImpactAreaIndicatorDto {
       'Does the projected benefit apply for the impact area indicator?',
     type: Boolean,
   })
-  isAplicableProjectedBenefits: boolean;
+  isApplicableProjectedBenefits: boolean;
 }
