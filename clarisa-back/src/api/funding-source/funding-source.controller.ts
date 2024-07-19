@@ -40,6 +40,6 @@ export class FundingSourceController {
   })
   @ApiOkResponse({ type: [FundingSourceDto] })
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.fundingSourceService.findOne(+id);
+    return this.fundingSourceService.findOne(id);
   }
 }

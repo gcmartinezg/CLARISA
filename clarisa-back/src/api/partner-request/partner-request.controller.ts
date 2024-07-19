@@ -23,11 +23,9 @@ import { UpdatePartnerRequestDto } from './dto/update-partner-request.dto';
 import { PartnerRequestService } from './partner-request.service';
 import { BulkPartnerRequestDto } from './dto/create-partner-dto';
 import { FindAllOptions } from 'src/shared/entities/enums/find-all-options';
-import { ApiBearerAuth, ApiExcludeController } from '@nestjs/swagger';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
-@ApiExcludeController()
 export class PartnerRequestController {
   constructor(private readonly partnerRequestService: PartnerRequestService) {}
 
@@ -57,7 +55,6 @@ export class PartnerRequestController {
 
   @Post('create')
   @UseGuards(JwtAuthGuard, PermissionGuard)
-  @ApiBearerAuth()
   async createPartnerRequest(
     @GetUserData() userData: UserData,
     @Body() newPartnerRequest: CreatePartnerRequestDto,

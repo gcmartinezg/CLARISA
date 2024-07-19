@@ -14,5 +14,5 @@ export class MisDto extends OmitType(BasicDtoV1, ['description'] as const) {
     minimum: 1,
     type: Number,
   })
-  main_contact_point_id: string;
+  main_contact_point_id: number;
 }

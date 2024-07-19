@@ -1,36 +1,38 @@
 import {
   Controller,
   Get,
-  Body,
-  Patch,
   Param,
   Query,
   ParseIntPipe,
-  Res,
-  HttpStatus,
-  HttpException,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Post,
+  UseGuards,
+  Body,
 } from '@nestjs/common';
 import { MisService } from './mis.service';
-import { UpdateMisDto } from './dto/update-mis.dto';
-import { Mis } from './entities/mis.entity';
-import { Response } from 'express';
 import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
-import {
-  ApiExcludeEndpoint,
-  ApiOkResponse,
-  ApiParam,
-  ApiQuery,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { MisDto } from './dto/mis.dto';
+import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
+import { PermissionGuard } from '../../shared/guards/permission.guard';
+import { GetUserData } from '../../shared/decorators/user-data.decorator';
+import { UserData } from '../../shared/interfaces/user-data';
+import { CreateMisDto } from './dto/create-mis.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
-@ApiTags('MIS')
 export class MisController {
-  constructor(private readonly misService: MisService) {}
+  constructor(private readonly _misService: MisService) {}
+
+  @Post('create')
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  create(
+    @GetUserData() userData: UserData,
+    @Body() createMisDto: CreateMisDto,
+  ) {
+    return this._misService.create(createMisDto, userData);
+  }
 
   @Get()
   @ApiQuery({
@@ -41,7 +43,7 @@ export class MisController {
   })
   @ApiOkResponse({ type: [MisDto] })
   async findAll(@Query('show') show: FindAllOptions) {
-    return await this.misService.findAll(show);
+    return await this._misService.findAll(show);
   }
 
   @Get('get/:id')
@@ -53,17 +55,6 @@ export class MisController {
   })
   @ApiOkResponse({ type: [MisDto] })
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.misService.findOne(id);
-  }
-
-  @Patch('update')
-  @ApiExcludeEndpoint()
-  async update(@Res() res: Response, @Body() updateMisDtoList: UpdateMisDto[]) {
-    try {
-      const result: Mis[] = await this.misService.update(updateMisDtoList);
-      return res.status(HttpStatus.OK).json(result);
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
+    return await this._misService.findOne(id);
   }
 }
