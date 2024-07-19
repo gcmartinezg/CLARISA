@@ -2,7 +2,7 @@ import { Exclude, Expose } from 'class-transformer';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { AuditableEntity } from '../../../shared/entities/extends/auditable-entity.entity';
 
-@Entity('projected_benefits_probabilites')
+@Entity('projected_benefit_probabilites')
 export class ProjectedBenefitProbability {
   @Expose({ name: 'probabilityID' })
   @PrimaryGeneratedColumn({ type: 'bigint' })

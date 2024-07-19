@@ -1,7 +1,7 @@
 import { OmitType } from '@nestjs/mapped-types';
 import { DepthDescriptionDto } from '../../depth-description/dto/depth-description.dto';
 import { ImpactAreaIndicatorDto } from '../../impact-area-indicator/dto/impact-area-indicator.dto';
-import { ProjectedBenefitWeightingDto } from '../../projected-benefit-weighting/dto/projected-benefit-weighting.dto';
+import { ProjectedBenefitWeightingDtoV1 } from '../../projected-benefit-weighting/dto/projected-benefit-weighting.v1.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ProjectedBenefitDto extends OmitType(ImpactAreaIndicatorDto, [
@@ -36,7 +36,7 @@ export class ProjectedBenefitDto extends OmitType(ImpactAreaIndicatorDto, [
 
   @ApiProperty({
     description: 'The weighting values of the projected benefit',
-    type: ProjectedBenefitWeightingDto,
+    type: ProjectedBenefitWeightingDtoV1,
   })
-  weightingValues: ProjectedBenefitWeightingDto[];
+  weightingValues: ProjectedBenefitWeightingDtoV1[];
 }
