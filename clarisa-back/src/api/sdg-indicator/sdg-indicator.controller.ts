@@ -10,12 +10,13 @@ import {
 } from '@nestjs/common';
 import { SdgIndicatorService } from './sdg-indicator.service';
 import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
-import { ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SdgIndicatorV2Dto } from './dto/sdg-indicator.v2.dto';
 import { SdgIndicatorV1Dto } from './dto/sdg-indicator.v1.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('SDG Indicators')
 export class SdgIndicatorController {
   constructor(private readonly sdgIndicatorService: SdgIndicatorService) {}
 

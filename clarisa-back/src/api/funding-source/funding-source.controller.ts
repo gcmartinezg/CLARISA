@@ -14,7 +14,7 @@ import { FundingSourceDto } from './dto/funding-source.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
-@ApiTags('Beneficiaries')
+@ApiTags('Funding Sources')
 export class FundingSourceController {
   constructor(private readonly fundingSourceService: FundingSourceService) {}
 

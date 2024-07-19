@@ -10,13 +10,14 @@ import {
 } from '@nestjs/common';
 import { SdgTargetService } from './sdg-target.service';
 import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
-import { ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SdgTargetV1Dto } from './dto/sdg-target.v1.dto';
 import { SdgTargetV2Dto } from './dto/sdg-target.v2.dto';
 import { SdgTargetIpsrDto } from './dto/sdg-target-ipsr.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('SDG Targets')
 export class SdgTargetController {
   constructor(private readonly sdgTargetService: SdgTargetService) {}
 

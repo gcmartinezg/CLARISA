@@ -9,11 +9,12 @@ import {
 } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
-import { ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PortfolioDto } from './dto/portfolio.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('Portfolios')
 export class PortfolioController {
   constructor(private readonly portfolioService: PortfolioService) {}
 

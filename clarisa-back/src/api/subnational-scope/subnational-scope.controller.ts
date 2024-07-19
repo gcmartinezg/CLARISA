@@ -10,10 +10,11 @@ import {
 import { FindAllOptions } from '../../shared/entities/enums/find-all-options';
 import { SubnationalScopeService } from './subnational-scope.service';
 import { SubnationalScopeDto } from './dto/subnational-scope.dto';
-import { ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('Subnational Scopes')
 export class SubnationalScopeController {
   constructor(private readonly studyTypeService: SubnationalScopeService) {}
 

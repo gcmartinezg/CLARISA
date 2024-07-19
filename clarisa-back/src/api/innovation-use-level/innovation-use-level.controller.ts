@@ -22,11 +22,13 @@ import {
   ApiOkResponse,
   ApiParam,
   ApiQuery,
+  ApiTags,
 } from '@nestjs/swagger';
 import { BasicDtoV1 } from '../../shared/entities/dtos/basic.v1.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('Innovation Use Levels')
 export class InnovationUseLevelController {
   constructor(
     private readonly innovationUseLevelService: InnovationUseLevelService,

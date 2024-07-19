@@ -7,7 +7,7 @@ import { PhaseStatus } from '../../shared/entities/enums/phase-status';
 import { PRMSApplication } from '../../shared/entities/enums/prms-applications';
 
 @Controller()
-@ApiTags('Beneficiaries')
+@ApiTags('Phases')
 export class PhaseController {
   constructor(private readonly phaseService: PhaseService) {}
 

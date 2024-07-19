@@ -22,11 +22,13 @@ import {
   ApiOkResponse,
   ApiParam,
   ApiQuery,
+  ApiTags,
 } from '@nestjs/swagger';
 import { ImpactAreaIndicatorDto } from './dto/impact-area-indicator.dto';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('Impact Area Indicators')
 export class ImpactAreaIndicatorController {
   constructor(
     private readonly impactAreaIndicatorService: ImpactAreaIndicatorService,
