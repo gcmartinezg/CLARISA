@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   DataSource,
+  EntityManager,
   FindOptionsRelations,
   FindOptionsWhere,
   MoreThanOrEqual,
@@ -249,7 +250,8 @@ export class InstitutionRepository extends Repository<Institution> {
     return this.fillOutInstitutionInfo(institution);
   }
 
-  async createInstitutionCountryBulk(
+  private async _createInstitutionCountryBulk(
+    entityManager: EntityManager,
     countryAndInstitution: number,
     id_institution: number,
     isHQ: boolean,
@@ -263,10 +265,11 @@ export class InstitutionRepository extends Repository<Institution> {
     institutionLocation.institution_id = id_institution;
     institutionLocation.auditableFields.created_by = createBy;
 
-    return this.institutionLocationRepository.save(institutionLocation);
+    return entityManager.save(institutionLocation);
   }
 
   async createBulkInstitution(
+    entityManager: EntityManager,
     BulkInstitutions: PartnerRequest,
     createBy: number,
   ) {
@@ -279,8 +282,9 @@ export class InstitutionRepository extends Repository<Institution> {
 
     institution.institution_type_id = BulkInstitutions.institution_type_id;
     institution.auditableFields.created_by = createBy;
-    institution = await this.save(institution);
-    await this.createInstitutionCountryBulk(
+    institution = await entityManager.save(institution);
+    await this._createInstitutionCountryBulk(
+      entityManager,
       BulkInstitutions.country_id,
       institution.id,
       true,
